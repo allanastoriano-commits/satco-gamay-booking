@@ -59,6 +59,27 @@ button.action{border:0;border-radius:9px;padding:11px 15px;font-weight:700;curso
 .confirmation pre{white-space:pre-wrap;font-family:Arial;line-height:1.6;margin:0}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 .hidden{display:none!important}
+
+/* SATCO two-way passenger/admin chat */
+.chat-fab{position:fixed;right:18px;bottom:18px;z-index:9000;border:0;border-radius:999px;padding:13px 17px;background:#0f766e;color:#fff;font-weight:800;box-shadow:0 6px 22px rgba(15,23,42,.28);cursor:pointer}
+.chat-modal{position:fixed;inset:0;background:rgba(15,23,42,.60);z-index:9500;display:none;align-items:center;justify-content:center;padding:14px}
+.chat-window{background:#fff;width:min(560px,100%);max-height:88vh;overflow:auto;border-radius:16px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.28)}
+.chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.chat-head h2{margin:0}
+.chat-close{border:0;background:#e2e8f0;border-radius:9px;padding:8px 11px;font-weight:800;cursor:pointer}
+.chat-sep{text-align:center;color:#64748b;font-size:12px;margin:13px 0;position:relative}.chat-sep:before,.chat-sep:after{content:"";display:inline-block;width:26%;border-top:1px solid #cbd5e1;vertical-align:middle;margin:0 8px}
+.chat-messages{background:#f8fafc;border:1px solid #cbd5e1;border-radius:12px;padding:10px;min-height:180px;max-height:330px;overflow:auto;margin:10px 0}
+.chat-row{display:flex;margin:8px 0}.chat-row.passenger{justify-content:flex-end}.chat-row.admin{justify-content:flex-start}
+.chat-bubble{max-width:82%;padding:9px 11px;border-radius:13px;line-height:1.4;white-space:pre-wrap;word-break:break-word}
+.chat-row.passenger .chat-bubble{background:#0f766e;color:#fff;border-bottom-right-radius:4px}.chat-row.admin .chat-bubble{background:#e2e8f0;color:#0f172a;border-bottom-left-radius:4px}
+.chat-time{display:block;font-size:10px;opacity:.72;margin-top:4px}
+.chat-code{background:#ecfeff;border:1px solid #99f6e4;border-radius:10px;padding:9px;margin:8px 0;font-size:13px}
+.admin-chat-list{display:grid;gap:8px;margin-top:10px}.admin-chat-item{border:1px solid #cbd5e1;border-radius:10px;padding:10px;background:#f8fafc;cursor:pointer}.admin-chat-item:hover{background:#ecfeff}.admin-chat-item strong{color:#115e59}.admin-chat-preview{font-size:12px;color:#64748b;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-chat-grid{display:grid;grid-template-columns:minmax(230px,.8fr) minmax(300px,1.2fr);gap:12px;margin-top:10px}
+.admin-chat-pane{border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#fff;min-height:220px}
+.chat-unread-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#dc2626;margin-left:6px}
+@media(max-width:720px){.admin-chat-grid{grid-template-columns:1fr}.chat-fab{right:12px;bottom:12px;padding:12px 14px}.chat-window{max-height:92vh}}
+
 @media(max-width:650px){
  .header-inner{align-items:center} .logo{width:62px;height:62px} h1{font-size:20px}
  .grid{grid-template-columns:1fr} .card{padding:14px} .seat{min-height:64px;font-size:13px}
@@ -137,6 +158,34 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 
     <h3 style="margin:18px 0 8px">Scheduled Trips</h3>
     <div id="adminTripList" style="overflow-x:auto">Loading...</div>
+
+    <hr style="border:0;border-top:1px solid #cbd5e1;margin:22px 0">
+    <h2 style="margin-bottom:6px">💬 Passenger Conversations</h2>
+    <div class="info"><strong>Two-way chat:</strong> Open a passenger inquiry below and reply directly. Passengers can return using their Inquiry Number and contact number.</div>
+    <div class="admin-chat-grid">
+      <div class="admin-chat-pane">
+        <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+          <strong>Inquiries</strong>
+          <button class="action secondary" style="padding:7px 9px" onclick="adminLoadChats()">REFRESH</button>
+        </div>
+        <div id="adminChatList" class="admin-chat-list"><span style="color:#64748b">No conversation loaded yet.</span></div>
+      </div>
+      <div class="admin-chat-pane">
+        <div id="adminChatEmpty" style="color:#64748b;padding:8px">Choose an inquiry from the left.</div>
+        <div id="adminChatConversation" class="hidden">
+          <div id="adminChatInfo" class="chat-code"></div>
+          <div id="adminChatMessages" class="chat-messages"></div>
+          <label>Reply to Passenger</label>
+          <textarea id="adminChatReply" placeholder="Type your reply..."></textarea>
+          <div class="actions">
+            <button class="action primary" onclick="adminSendChatReply()">SEND REPLY</button>
+            <button class="action secondary" onclick="adminSetChatStatus('CLOSED')">CLOSE CONVERSATION</button>
+            <button class="action warning" onclick="adminSetChatStatus('OPEN')">REOPEN</button>
+          </div>
+          <div id="adminChatMessage" class="message"></div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section id="regular">
@@ -879,6 +928,208 @@ try {
 } catch(e) { console.warn("Trip schedule realtime unavailable:", e); }
 </script>
 
+
+<button class="chat-fab" onclick="openSatcoChat()">💬 CHAT / INQUIRY</button>
+
+<div id="satcoChatModal" class="chat-modal">
+  <div class="chat-window">
+    <div class="chat-head">
+      <h2>💬 SATCO-Gamay Chat / Inquiry</h2>
+      <button class="chat-close" onclick="closeSatcoChat()">✕</button>
+    </div>
+    <div class="info">Ask about trip schedules, available seats, pick-up/drop-off points, special trips, delays, or an existing booking. You can continue the same conversation later.</div>
+
+    <div id="chatStartArea">
+      <div class="grid" style="margin-top:12px">
+        <div><label>Your Name <span class="required">*</span></label><input id="chatPassengerName" type="text" placeholder="Passenger name"></div>
+        <div><label>Contact Number <span class="required">*</span></label><input id="chatPassengerContact" type="tel" placeholder="09XXXXXXXXX"></div>
+      </div>
+      <label style="margin-top:10px">Booking Number <span style="font-weight:400;color:#64748b">(optional)</span></label>
+      <input id="chatBookingCode" type="text" placeholder="Example: SATCO-... / booking number">
+      <label style="margin-top:10px">Your Message <span class="required">*</span></label>
+      <textarea id="chatFirstMessage" placeholder="Type your question or inquiry..."></textarea>
+      <button class="action primary" style="width:100%;margin-top:10px" onclick="startSatcoChat()">START CONVERSATION</button>
+
+      <div class="chat-sep">OR CONTINUE AN EXISTING CHAT</div>
+      <label>Inquiry Number</label>
+      <input id="chatResumeCode" type="text" placeholder="Example: SATCO-A1B2C3D4">
+      <label style="margin-top:10px">Contact Number</label>
+      <input id="chatResumeContact" type="tel" placeholder="Same contact number used before">
+      <button class="action secondary" style="width:100%;margin-top:10px" onclick="resumeSatcoChat()">OPEN MY CONVERSATION</button>
+      <div id="chatStartMessage" class="message"></div>
+    </div>
+
+    <div id="chatConversationArea" class="hidden">
+      <div id="chatThreadInfo" class="chat-code"></div>
+      <div id="chatMessages" class="chat-messages"></div>
+      <label>Message</label>
+      <textarea id="chatNewMessage" placeholder="Type a message to SATCO-Gamay..."></textarea>
+      <div class="actions">
+        <button class="action primary" onclick="sendPassengerChat()">SEND MESSAGE</button>
+        <button class="action secondary" onclick="leavePassengerChat()">BACK</button>
+      </div>
+      <div id="chatConversationMessage" class="message"></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* SATCO-Gamay two-way passenger/admin inquiry chat */
+let satcoChatCode = null;
+let satcoChatContact = null;
+let satcoChatPoll = null;
+let adminActiveChatCode = null;
+let adminChatPoll = null;
+
+function chatEsc(v){
+  return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function chatDate(v){
+  try{return new Date(v).toLocaleString('en-PH',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}catch(e){return '';}
+}
+function chatShow(id,text,type='error'){
+  const e=document.getElementById(id); if(!e)return;
+  e.textContent=text; e.className='message '+type; e.style.display='block';
+}
+function chatClearMsg(id){ const e=document.getElementById(id); if(e){e.className='message';e.textContent='';e.style.display='none';} }
+
+function openSatcoChat(){
+  const m=document.getElementById('satcoChatModal'); m.style.display='flex';
+  const savedCode=localStorage.getItem('satcoChatCode')||'';
+  const savedContact=localStorage.getItem('satcoChatContact')||'';
+  if(savedCode && savedContact){
+    document.getElementById('chatResumeCode').value=savedCode;
+    document.getElementById('chatResumeContact').value=savedContact;
+  }
+}
+function closeSatcoChat(){
+  document.getElementById('satcoChatModal').style.display='none';
+  if(satcoChatPoll){clearInterval(satcoChatPoll);satcoChatPoll=null;}
+}
+async function startSatcoChat(){
+  const name=document.getElementById('chatPassengerName').value.trim();
+  const contact=document.getElementById('chatPassengerContact').value.trim();
+  const booking=document.getElementById('chatBookingCode').value.trim();
+  const message=document.getElementById('chatFirstMessage').value.trim();
+  if(!name||!contact||!message) return chatShow('chatStartMessage','Please enter your name, contact number, and message.');
+  chatShow('chatStartMessage','Sending your inquiry...','success');
+  try{
+    const {data,error}=await satcoSupabase.rpc('create_satco_chat',{p_passenger_name:name,p_contact_no:contact,p_booking_code:booking||null,p_message:message});
+    if(error) throw error;
+    const row=Array.isArray(data)?data[0]:data;
+    const code=row?.inquiry_code;
+    if(!code) throw new Error('Inquiry number was not returned.');
+    satcoChatCode=code; satcoChatContact=contact;
+    localStorage.setItem('satcoChatCode',code); localStorage.setItem('satcoChatContact',contact);
+    document.getElementById('chatResumeCode').value=code; document.getElementById('chatResumeContact').value=contact;
+    await openPassengerConversation();
+  }catch(e){console.error(e);chatShow('chatStartMessage',e.message||'Unable to start the conversation.');}
+}
+async function resumeSatcoChat(){
+  const code=document.getElementById('chatResumeCode').value.trim();
+  const contact=document.getElementById('chatResumeContact').value.trim();
+  if(!code||!contact) return chatShow('chatStartMessage','Enter your Inquiry Number and contact number.');
+  satcoChatCode=code; satcoChatContact=contact;
+  try{
+    const ok=await loadPassengerMessages(true);
+    if(!ok) return;
+    localStorage.setItem('satcoChatCode',code); localStorage.setItem('satcoChatContact',contact);
+    document.getElementById('chatStartArea').classList.add('hidden');
+    document.getElementById('chatConversationArea').classList.remove('hidden');
+    startPassengerChatPolling();
+  }catch(e){console.error(e);chatShow('chatStartMessage',e.message||'Unable to open the conversation.');}
+}
+async function openPassengerConversation(){
+  document.getElementById('chatStartArea').classList.add('hidden');
+  document.getElementById('chatConversationArea').classList.remove('hidden');
+  await loadPassengerMessages(false); startPassengerChatPolling();
+}
+function leavePassengerChat(){
+  document.getElementById('chatConversationArea').classList.add('hidden');
+  document.getElementById('chatStartArea').classList.remove('hidden');
+  if(satcoChatPoll){clearInterval(satcoChatPoll);satcoChatPoll=null;}
+}
+function startPassengerChatPolling(){
+  if(satcoChatPoll) clearInterval(satcoChatPoll);
+  satcoChatPoll=setInterval(()=>{ if(satcoChatCode && document.getElementById('satcoChatModal').style.display==='flex') loadPassengerMessages(false); },5000);
+}
+async function loadPassengerMessages(showNotFound=true){
+  if(!satcoChatCode||!satcoChatContact) return false;
+  const {data,error}=await satcoSupabase.rpc('get_satco_chat',{p_inquiry_code:satcoChatCode,p_contact_no:satcoChatContact});
+  if(error) throw error;
+  const rows=data||[];
+  if(!rows.length){ if(showNotFound) chatShow('chatStartMessage','Conversation not found. Check the Inquiry Number and contact number.'); return false; }
+  const first=rows[0];
+  document.getElementById('chatThreadInfo').innerHTML=`<strong>Inquiry:</strong> ${chatEsc(first.inquiry_code)} &nbsp;|&nbsp; <strong>Status:</strong> ${chatEsc(first.status)}${first.booking_code?`<br><strong>Booking:</strong> ${chatEsc(first.booking_code)}`:''}<br><small>Keep this Inquiry Number so you can return to this conversation.</small>`;
+  const box=document.getElementById('chatMessages');
+  const wasNearBottom=(box.scrollHeight-box.scrollTop-box.clientHeight)<70;
+  box.innerHTML=rows.map(r=>`<div class="chat-row ${r.sender==='ADMIN'?'admin':'passenger'}"><div class="chat-bubble"><strong>${r.sender==='ADMIN'?'SATCO Admin':'You'}</strong><br>${chatEsc(r.message)}<span class="chat-time">${chatEsc(chatDate(r.created_at))}</span></div></div>`).join('');
+  if(wasNearBottom || !box.dataset.loaded) box.scrollTop=box.scrollHeight;
+  box.dataset.loaded='1';
+  const input=document.getElementById('chatNewMessage');
+  const sendBtn=input?.parentElement?.querySelector('button.action.primary');
+  if(first.status==='CLOSED'){ input.disabled=true; input.placeholder='This conversation is closed. Start a new inquiry if needed.'; if(sendBtn)sendBtn.disabled=true; }
+  else{ input.disabled=false; input.placeholder='Type a message to SATCO-Gamay...'; if(sendBtn)sendBtn.disabled=false; }
+  return true;
+}
+async function sendPassengerChat(){
+  const input=document.getElementById('chatNewMessage'); const message=input.value.trim();
+  if(!message) return;
+  try{
+    const {error}=await satcoSupabase.rpc('passenger_send_satco_chat',{p_inquiry_code:satcoChatCode,p_contact_no:satcoChatContact,p_message:message});
+    if(error) throw error;
+    input.value=''; chatClearMsg('chatConversationMessage'); await loadPassengerMessages(false);
+  }catch(e){console.error(e);chatShow('chatConversationMessage',e.message||'Unable to send message.');}
+}
+
+async function adminLoadChats(){
+  const box=document.getElementById('adminChatList'); if(!box)return;
+  box.innerHTML='<span style="color:#64748b">Loading inquiries...</span>';
+  try{
+    const {data,error}=await satcoSupabase.rpc('admin_list_satco_chats'); if(error)throw error;
+    const rows=data||[];
+    box.innerHTML=rows.length?rows.map(r=>`<div class="admin-chat-item" onclick="adminOpenChat('${chatEsc(r.inquiry_code)}')"><strong>${chatEsc(r.passenger_name)}</strong> — ${chatEsc(r.inquiry_code)} ${r.status==='OPEN'?'<span class="chat-unread-dot" title="Open"></span>':''}<div style="font-size:12px;margin-top:3px">${chatEsc(r.contact_no)}${r.booking_code?' • Booking '+chatEsc(r.booking_code):''} • ${chatEsc(r.status)}</div><div class="admin-chat-preview">${r.last_sender==='ADMIN'?'You: ':'Passenger: '}${chatEsc(r.last_message||'')}</div></div>`).join(''):'<span style="color:#64748b">No passenger inquiries yet.</span>';
+  }catch(e){console.error(e);box.innerHTML='<span style="color:#991b1b">Unable to load inquiries.</span>';}
+}
+async function adminOpenChat(code){
+  adminActiveChatCode=code;
+  document.getElementById('adminChatEmpty').classList.add('hidden');
+  document.getElementById('adminChatConversation').classList.remove('hidden');
+  await adminLoadActiveChat();
+  if(adminChatPoll) clearInterval(adminChatPoll);
+  adminChatPoll=setInterval(()=>{ if(adminActiveChatCode && !document.getElementById('adminPanel').classList.contains('hidden')) adminLoadActiveChat(); },5000);
+}
+async function adminLoadActiveChat(){
+  if(!adminActiveChatCode)return;
+  try{
+    const {data,error}=await satcoSupabase.rpc('admin_get_satco_chat',{p_inquiry_code:adminActiveChatCode}); if(error)throw error;
+    const rows=data||[]; if(!rows.length)return;
+    const first=rows[0];
+    document.getElementById('adminChatInfo').innerHTML=`<strong>${chatEsc(first.passenger_name)}</strong> • ${chatEsc(first.contact_no)}<br><strong>Inquiry:</strong> ${chatEsc(first.inquiry_code)}${first.booking_code?` • <strong>Booking:</strong> ${chatEsc(first.booking_code)}`:''} • <strong>Status:</strong> ${chatEsc(first.status)}`;
+    const box=document.getElementById('adminChatMessages');
+    const wasNearBottom=(box.scrollHeight-box.scrollTop-box.clientHeight)<70;
+    box.innerHTML=rows.map(r=>`<div class="chat-row ${r.sender==='ADMIN'?'passenger':'admin'}"><div class="chat-bubble"><strong>${r.sender==='ADMIN'?'You (Admin)':'Passenger'}</strong><br>${chatEsc(r.message)}<span class="chat-time">${chatEsc(chatDate(r.created_at))}</span></div></div>`).join('');
+    if(wasNearBottom || !box.dataset.loaded)box.scrollTop=box.scrollHeight; box.dataset.loaded='1';
+  }catch(e){console.error(e);chatShow('adminChatMessage',e.message||'Unable to load conversation.');}
+}
+async function adminSendChatReply(){
+  const input=document.getElementById('adminChatReply'); const message=input.value.trim();
+  if(!adminActiveChatCode||!message)return;
+  try{
+    const {error}=await satcoSupabase.rpc('admin_send_satco_chat',{p_inquiry_code:adminActiveChatCode,p_message:message}); if(error)throw error;
+    input.value=''; chatClearMsg('adminChatMessage'); await adminLoadActiveChat(); await adminLoadChats();
+  }catch(e){console.error(e);chatShow('adminChatMessage',e.message||'Unable to send reply.');}
+}
+async function adminSetChatStatus(status){
+  if(!adminActiveChatCode)return;
+  try{
+    const {error}=await satcoSupabase.rpc('admin_set_satco_chat_status',{p_inquiry_code:adminActiveChatCode,p_status:status}); if(error)throw error;
+    chatShow('adminChatMessage',status==='CLOSED'?'Conversation closed.':'Conversation reopened.','success'); await adminLoadActiveChat(); await adminLoadChats();
+  }catch(e){console.error(e);chatShow('adminChatMessage',e.message||'Unable to update conversation.');}
+}
+</script>
+
 <div id="adminLoginModal" class="hidden" style="position:fixed;inset:0;background:rgba(15,23,42,.62);z-index:9999;display:none;align-items:center;justify-content:center;padding:18px">
   <div class="card" style="max-width:430px;width:100%;margin:0">
     <h2>🔐 Admin Login</h2>
@@ -1029,7 +1280,8 @@ async function adminLogin(){
     document.getElementById("adminLogoutBtn")?.classList.remove("hidden");
     document.getElementById("adminPanel")?.classList.remove("hidden");
     await adminLoadTrips();
-    adminMsg("Admin mode is ON. You can now manage trip dates and times.");
+    await adminLoadChats();
+    adminMsg("Admin mode is ON. You can manage trips and reply to passenger inquiries.");
     document.getElementById("adminPanel")?.scrollIntoView({behavior:"smooth"});
   }catch(e){
     console.error("SATCO admin login:",e);
