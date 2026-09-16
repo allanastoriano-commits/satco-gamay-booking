@@ -65,34 +65,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 }
 .online-status{display:block;text-align:center;padding:7px 10px;background:#dcfce7;color:#166534;font-size:12px;font-weight:700}
 .trip-helper{background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:12px;margin:-2px 0 14px}.trip-helper strong{color:#115e59}.trip-badge{display:inline-block;margin-top:8px;padding:5px 9px;border-radius:999px;background:#e0f2fe;color:#075985;font-size:12px;font-weight:700}.seat-summary{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 0}.seat-summary span{padding:6px 10px;border-radius:999px;background:#f1f5f9;font-size:12px;font-weight:700}.seat-map-empty{padding:18px;text-align:center;background:#fff;border:1px dashed #94a3b8;border-radius:12px;color:#64748b}.seat:disabled{opacity:.72;cursor:not-allowed;box-shadow:none}.loading{opacity:.7;pointer-events:none}
-
-/* Restored SATCO two-way chat */
-.chat-fab{position:fixed;right:18px;bottom:18px;z-index:9000;border:0;border-radius:999px;padding:13px 17px;background:#0f766e;color:#fff;font-weight:800;box-shadow:0 6px 22px rgba(15,23,42,.28);cursor:pointer}
-.chat-modal{position:fixed;inset:0;background:rgba(15,23,42,.60);z-index:9500;display:none;align-items:center;justify-content:center;padding:14px}
-.chat-window{background:#fff;width:min(560px,100%);max-height:88vh;overflow:auto;border-radius:16px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.28)}
-.chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-.chat-head h2{margin:0}
-.chat-close{border:0;background:#e2e8f0;border-radius:9px;padding:8px 11px;font-weight:800;cursor:pointer}
-.chat-sep{text-align:center;color:#64748b;font-size:12px;margin:13px 0;position:relative}.chat-sep:before,.chat-sep:after{content:"";display:inline-block;width:26%;border-top:1px solid #cbd5e1;vertical-align:middle;margin:0 8px}
-.chat-messages{background:#f8fafc;border:1px solid #cbd5e1;border-radius:12px;padding:10px;min-height:180px;max-height:330px;overflow:auto;margin:10px 0}
-.chat-row{display:flex;margin:8px 0}.chat-row.passenger{justify-content:flex-end}.chat-row.admin{justify-content:flex-start}
-.chat-bubble{max-width:82%;padding:9px 11px;border-radius:13px;line-height:1.4;white-space:pre-wrap;word-break:break-word}
-.chat-row.passenger .chat-bubble{background:#0f766e;color:#fff;border-bottom-right-radius:4px}.chat-row.admin .chat-bubble{background:#e2e8f0;color:#0f172a;border-bottom-left-radius:4px}
-.chat-time{display:block;font-size:10px;opacity:.72;margin-top:4px}
-.chat-code{background:#ecfeff;border:1px solid #99f6e4;border-radius:10px;padding:9px;margin:8px 0;font-size:13px}
-.admin-chat-list{display:grid;gap:8px;margin-top:10px}.admin-chat-item{border:1px solid #cbd5e1;border-radius:10px;padding:10px;background:#f8fafc;cursor:pointer}.admin-chat-item:hover{background:#ecfeff}.admin-chat-item strong{color:#115e59}.admin-chat-preview{font-size:12px;color:#64748b;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.admin-chat-grid{display:grid;grid-template-columns:minmax(230px,.8fr) minmax(300px,1.2fr);gap:12px;margin-top:10px}
-.admin-chat-pane{border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#fff;min-height:220px}
-.chat-unread-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#dc2626;margin-left:6px}
-@media(max-width:720px){.admin-chat-grid{grid-template-columns:1fr}.chat-fab{right:12px;bottom:12px;padding:12px 14px}.chat-window{max-height:92vh}}
-
-@media(max-width:650px){
- .header-inner{align-items:center} .logo{width:62px;height:62px} h1{font-size:20px}
- .grid{grid-template-columns:1fr} .card{padding:14px} .seat{min-height:64px;font-size:13px}
-}
-.online-status{display:block;text-align:center;padding:7px 10px;background:#dcfce7;color:#166534;font-size:12px;font-weight:700}
-.trip-helper{background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:12px;margin:-2px 0 14px}.trip-helper strong{color:#115e59}.trip-badge{display:inline-block;margin-top:8px;padding:5px 9px;border-radius:999px;background:#e0f2fe;color:#075985;font-size:12px;font-weight:700}.seat-summary{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 0}.seat-summary span{padding:6px 10px;border-radius:999px;background:#f1f5f9;font-size:12px;font-weight:700}.seat-map-empty{padding:18px;text-align:center;background:#fff;border:1px dashed #94a3b8;border-radius:12px;color:#64748b}.seat:disabled{opacity:.72;cursor:not-allowed;box-shadow:none}.loading{opacity:.7;pointer-events:none}
-
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -125,7 +97,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 
     <div class="grid" style="margin-top:12px">
       <div><label>Travel Date <span class="required">*</span></label><input id="adminDate" type="date"></div>
-      <div><label>Trip <span class="required">*</span></label><select id="adminTripNumber"><option value="1">1st Trip</option><option value="2">2nd Trip</option><option value="3">3rd Trip</option><option value="4">4th Trip</option><option value="0">Additional / Time Only</option></select></div>
+      <div><label>Trip <span class="required">*</span></label><select id="adminTripNumber"><option value="1">1st Trip — 4:00 AM</option><option value="2">2nd Trip — 4:30 AM</option><option value="3">3rd Trip — 5:00 AM</option><option value="4">4th Trip — 5:30 AM</option></select></div>
       <div><label>Departure Time</label><input id="adminTime" type="time" readonly></div>
       <div><label>Route <span class="required">*</span></label>
         <select id="adminRoute">
@@ -158,42 +130,12 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
       <button class="action warning" onclick="adminUpdateTrip()">UPDATE SELECTED TRIP</button>
       <button class="action primary" onclick="adminSetBookingOpen(true)">OPEN FOR BOOKING</button>
       <button class="action secondary" onclick="adminSetBookingOpen(false)">CLOSE BOOKING</button>
-      <button class="action warning" onclick="adminFinishTrip()">MARK AS FINISHED</button>
       <button class="action danger" onclick="adminCancelTrip()">CANCEL SELECTED TRIP</button>
       <button class="action secondary" onclick="adminClearForm()">CLEAR FORM</button>
     </div>
 
     <h3 style="margin:18px 0 8px">Scheduled Trips</h3>
     <div id="adminTripList" style="overflow-x:auto">Loading...</div>
-<hr style="border:0;border-top:1px solid #cbd5e1;margin:22px 0">
-    <h2 style="margin-bottom:6px">💬 Passenger Conversations</h2>
-    <div class="info"><strong>Two-way chat:</strong> Open a passenger inquiry below and reply directly. Passengers can return using their Inquiry Number and contact number.</div>
-    <div class="admin-chat-grid">
-      <div class="admin-chat-pane">
-        <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
-          <strong>Inquiries</strong>
-          <button class="action secondary" style="padding:7px 9px" onclick="adminLoadChats()">REFRESH</button>
-        </div>
-        <div id="adminChatList" class="admin-chat-list"><span style="color:#64748b">No conversation loaded yet.</span></div>
-      </div>
-      <div class="admin-chat-pane">
-        <div id="adminChatEmpty" style="color:#64748b;padding:8px">Choose an inquiry from the left.</div>
-        <div id="adminChatConversation" class="hidden">
-          <div id="adminChatInfo" class="chat-code"></div>
-          <div id="adminChatMessages" class="chat-messages"></div>
-          <label>Reply to Passenger</label>
-          <textarea id="adminChatReply" placeholder="Type your reply..."></textarea>
-          <div class="actions">
-            <button class="action primary" onclick="adminSendChatReply()">SEND REPLY</button>
-            <button class="action secondary" onclick="adminSetChatStatus('CLOSED')">CLOSE CONVERSATION</button>
-            <button class="action warning" onclick="adminSetChatStatus('OPEN')">REOPEN</button>
-          </div>
-          <div id="adminChatMessage" class="message"></div>
-        </div>
-      </div>
-    </div>
-  
-
   </section>
 
   <section id="regular">
@@ -303,7 +245,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
         <button class="action secondary" onclick="clearCancel()">CLEAR</button>
         <button class="action warning" onclick="clearAllBookings()">ADMIN CLEAR ALL BOOKINGS</button>
       </div>
-      <div id="bookingList" class="booking-list"></div>
     </div>
 
     <div id="confirmation" class="card confirmation">
@@ -418,8 +359,6 @@ async function loadTripChooser() {
     if (error) throw error;
     const trips = data || [];
     window.satcoScheduledTrips = trips;
-    const statusBox=document.getElementById("tripStatus");
-    if(statusBox) statusBox.textContent=`Schedule synchronized: ${trips.length} OPEN trip(s) available online.`;
     populateRouteAndVanSelectors(trips);
     chooser.innerHTML = '<option value="">Select a trip</option>';
     trips.forEach(t => {
@@ -438,12 +377,10 @@ async function loadTripChooser() {
       document.getElementById("tripStatus").textContent="No scheduled trip is currently available.";
       return;
     }
-    // Select the newest OPEN schedule date automatically.
-    // Older still-open dates remain available in the dropdown until the Admin marks them FINISHED/CLOSED.
-    dateChooser.value=dates[dates.length-1];
+    dateChooser.value=dates[0];
     populateTripNumbers();
     const first=document.querySelector('#tripNumberChooser option[value]:not([value=""])');
-    if(first){ tripChooser.value=first.dataset.tripId || ''; document.getElementById('tripNumberChooser').value=first.dataset.tripId || ''; await selectTripById(chooser.value=first.dataset.tripId); }
+    if(first){ tripChooser.value=first.dataset.tripId || ''; await selectTripById(chooser.value=first.dataset.tripId); }
   } catch(e) {
     console.error(e);
     dateChooser.innerHTML='<option value="">Unable to load dates</option>';
@@ -453,23 +390,7 @@ async function loadTripChooser() {
 
 function tripLabel(n, time){
   const ord={1:'1st',2:'2nd',3:'3rd',4:'4th'}[Number(n)] || `${n}th`;
-  return `${ord} Trip`;
-}
-function isGamayOrigin(route){
-  return String(route||"").trim().toLowerCase().startsWith("gamay -");
-}
-function formatDepartureTime(time){
-  const raw=String(time||"").slice(0,5);
-  if(!raw) return "Time not set";
-  const [h,m]=raw.split(":").map(Number);
-  const ap=h>=12?"PM":"AM";
-  const hh=((h+11)%12)+1;
-  return `${hh}:${String(m).padStart(2,"0")} ${ap}`;
-}
-function passengerTripLabel(t){
-  const n=Number(t.trip_number||0);
-  if(isGamayOrigin(t.route) && n>=1 && n<=4) return tripLabel(n,t.departure_time);
-  return formatDepartureTime(t.departure_time);
+  return `${ord} Trip — ${String(time||'').slice(0,5)}`;
 }
 function populateTripNumbers(){
   const date=document.getElementById('tripDateChooser')?.value;
@@ -478,21 +399,29 @@ function populateTripNumbers(){
   const sel=document.getElementById('tripNumberChooser');
   if(!sel) return;
   sel.innerHTML='<option value="">Select Trip</option>';
+  const seen=new Set();
   trips.forEach(t=>{
-    const o=document.createElement('option');
-    o.value=t.id;
-    o.dataset.tripId=t.id;
-    o.textContent=passengerTripLabel(t);
-    sel.appendChild(o);
+    const n=Number(t.trip_number||0);
+    if(!n || seen.has(n)) return;
+    seen.add(n);
+    const o=document.createElement('option'); o.value=String(n); o.dataset.tripId=t.id;
+    o.textContent=tripLabel(n,t.departure_time); sel.appendChild(o);
   });
-  if(!trips.length) sel.innerHTML='<option value="">No trips for this date/route</option>';
+  if(!seen.size) sel.innerHTML='<option value="">No trips for this date/route</option>';
 }
 async function chooseTripNumber(){
-  const tripId=document.getElementById('tripNumberChooser')?.value || '';
-  if(!tripId) return;
-  document.getElementById('tripChooser').value=tripId;
-  await selectTripById(tripId);
+  const date=document.getElementById('tripDateChooser')?.value;
+  const n=Number(document.getElementById('tripNumberChooser')?.value);
+  const route=document.getElementById('route')?.value || '';
+  const van=document.getElementById('van')?.value || '';
+  let candidates=(window.satcoScheduledTrips||[]).filter(t=>t.trip_date===date && Number(t.trip_number)===n && (!route || t.route===route) && (!van || t.van_no===van));
+  if(!candidates.length) candidates=(window.satcoScheduledTrips||[]).filter(t=>t.trip_date===date && Number(t.trip_number)===n && (!route || t.route===route));
+  if(!candidates.length) return;
+  const chosen=candidates[0];
+  document.getElementById('tripChooser').value=chosen.id;
+  await selectTripById(chosen.id);
 }
+
 function populateRouteAndVanSelectors(trips, preferredRoute = "", preferredVan = "") {
   const route = document.getElementById("route");
   const van = document.getElementById("van");
@@ -585,7 +514,6 @@ async function selectTripById(tripId) {
     updateDriver();
     await loadOnlineBookings();
     renderSeats();
-    renderBookingList();
     document.getElementById("tripStatus").textContent =
       `${data.route} • ${data.van_no} • ${data.driver_name}`;
   } catch(e) {
@@ -623,25 +551,15 @@ async function findCurrentTrip() {
 async function loadOnlineBookings() {
   if (!currentTripId) { onlineBookings = []; return; }
 
-  // Use the protected RPC instead of reading the booking table directly.
-  // This keeps seat availability working for public passengers even when
-  // the bookings table itself is protected by RLS.
-  const { data, error } = await satcoSupabase.rpc("get_satco_trip_manifest", {
+  // Public booking page retrieves seat availability only.
+  // Passenger manifest/details remain for the admin page only.
+  const { data, error } = await satcoSupabase.rpc("get_satco_booked_seats", {
     p_trip_id: currentTripId
   });
   if (error) throw error;
   onlineBookings = (data || []).map(x => ({
-    id: null,
-    booking_code: x.booking_code,
     seat_number: Number(x.seat_number),
-    passenger_name: x.passenger_name,
-    contact_no: x.contact_no,
-    pickup_point: x.pickup_point,
-    dropoff_point: x.dropoff_point,
-    status: x.status,
-    payment_method: x.payment_method,
-    payment_status: x.payment_status,
-    created_at: x.created_at
+    status: x.status || "Booked"
   }));
 }
 
@@ -650,7 +568,6 @@ async function refreshOnlineTrip() {
     await findCurrentTrip();
     await loadOnlineBookings();
     renderSeats();
-    renderBookingList();
     if (!currentTrip) {
       showMsg("regularMessage","No online trip is scheduled for the selected date, time, route and van yet.","error");
     } else {
@@ -818,7 +735,6 @@ Please keep this booking number and your contact number for cancellation or inqu
     document.getElementById("gcashPreview").style.display="none";
     await loadOnlineBookings();
     renderSeats();
-    renderBookingList();
   } catch(e) {
     console.error(e);
     showMsg("regularMessage", e.message || "Online booking failed. If a booking number was already issued, please check it before trying again.","error");
@@ -901,9 +817,10 @@ loadTripChooser();
 
 document.getElementById("route").addEventListener("change", async () => {
   const trips = window.satcoScheduledTrips || [];
+  const selectedDate = document.getElementById("tripDateChooser")?.value || "";
   const route = document.getElementById("route").value;
   const van = document.getElementById("van");
-  const routeTrips = trips.filter(t => t.route === route);
+  const routeTrips = trips.filter(t => t.trip_date === selectedDate && t.route === route);
 
   van.innerHTML = '<option value="">Select Van / Plate Number</option>';
   [...new Set(routeTrips.map(t => t.van_no).filter(Boolean))].forEach(v => {
@@ -936,216 +853,7 @@ try {
     }).subscribe();
 } catch(e) { console.warn("Realtime subscription unavailable:", e); }
 setInterval(async()=>{ if(currentTripId){ try{ await loadOnlineBookings(); renderSeats(); renderBookingList(); }catch(e){ console.warn("Seat refresh:",e); } } },15000);
-try {
-  satcoSupabase.channel("satco-trip-schedule-live")
-    .on("postgres_changes", {event:"*", schema:"public", table:"satco_trips"}, async () => {
-      try { await loadTripChooser(); } catch(e) { console.warn("Trip schedule refresh:", e); }
-    }).subscribe();
-} catch(e) { console.warn("Trip schedule realtime unavailable:", e); }
 </script>
-
-<button class="chat-fab" onclick="openSatcoChat()">💬 CHAT / INQUIRY</button>
-
-<div id="satcoChatModal" class="chat-modal">
-  <div class="chat-window">
-    <div class="chat-head">
-      <h2>💬 SATCO-Gamay Chat / Inquiry</h2>
-      <button class="chat-close" onclick="closeSatcoChat()">✕</button>
-    </div>
-    <div class="info">Ask about trip schedules, available seats, pick-up/drop-off points, special trips, delays, or an existing booking. You can continue the same conversation later.</div>
-
-    <div id="chatStartArea">
-      <div class="grid" style="margin-top:12px">
-        <div><label>Your Name <span class="required">*</span></label><input id="chatPassengerName" type="text" placeholder="Passenger name"></div>
-        <div><label>Contact Number <span class="required">*</span></label><input id="chatPassengerContact" type="tel" placeholder="09XXXXXXXXX"></div>
-      </div>
-      <label style="margin-top:10px">Booking Number <span style="font-weight:400;color:#64748b">(optional)</span></label>
-      <input id="chatBookingCode" type="text" placeholder="Example: SATCO-... / booking number">
-      <label style="margin-top:10px">Your Message <span class="required">*</span></label>
-      <textarea id="chatFirstMessage" placeholder="Type your question or inquiry..."></textarea>
-      <button class="action primary" style="width:100%;margin-top:10px" onclick="startSatcoChat()">START CONVERSATION</button>
-
-      <div class="chat-sep">OR CONTINUE AN EXISTING CHAT</div>
-      <label>Inquiry Number</label>
-      <input id="chatResumeCode" type="text" placeholder="Example: SATCO-A1B2C3D4">
-      <label style="margin-top:10px">Contact Number</label>
-      <input id="chatResumeContact" type="tel" placeholder="Same contact number used before">
-      <button class="action secondary" style="width:100%;margin-top:10px" onclick="resumeSatcoChat()">OPEN MY CONVERSATION</button>
-      <div id="chatStartMessage" class="message"></div>
-    </div>
-
-    <div id="chatConversationArea" class="hidden">
-      <div id="chatThreadInfo" class="chat-code"></div>
-      <div id="chatMessages" class="chat-messages"></div>
-      <label>Message</label>
-      <textarea id="chatNewMessage" placeholder="Type a message to SATCO-Gamay..."></textarea>
-      <div class="actions">
-        <button class="action primary" onclick="sendPassengerChat()">SEND MESSAGE</button>
-        <button class="action secondary" onclick="leavePassengerChat()">BACK</button>
-      </div>
-      <div id="chatConversationMessage" class="message"></div>
-    </div>
-  </div>
-</div>
-
-
-<script>
-/* SATCO-Gamay two-way passenger/admin inquiry chat */
-let satcoChatCode = null;
-let satcoChatContact = null;
-let satcoChatPoll = null;
-let adminActiveChatCode = null;
-let adminChatPoll = null;
-
-function chatEsc(v){
-  return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-function chatDate(v){
-  try{return new Date(v).toLocaleString('en-PH',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}catch(e){return '';}
-}
-function chatShow(id,text,type='error'){
-  const e=document.getElementById(id); if(!e)return;
-  e.textContent=text; e.className='message '+type; e.style.display='block';
-}
-function chatClearMsg(id){ const e=document.getElementById(id); if(e){e.className='message';e.textContent='';e.style.display='none';} }
-
-function openSatcoChat(){
-  const m=document.getElementById('satcoChatModal'); m.style.display='flex';
-  const savedCode=localStorage.getItem('satcoChatCode')||'';
-  const savedContact=localStorage.getItem('satcoChatContact')||'';
-  if(savedCode && savedContact){
-    document.getElementById('chatResumeCode').value=savedCode;
-    document.getElementById('chatResumeContact').value=savedContact;
-  }
-}
-function closeSatcoChat(){
-  document.getElementById('satcoChatModal').style.display='none';
-  if(satcoChatPoll){clearInterval(satcoChatPoll);satcoChatPoll=null;}
-}
-async function startSatcoChat(){
-  const name=document.getElementById('chatPassengerName').value.trim();
-  const contact=document.getElementById('chatPassengerContact').value.trim();
-  const booking=document.getElementById('chatBookingCode').value.trim();
-  const message=document.getElementById('chatFirstMessage').value.trim();
-  if(!name||!contact||!message) return chatShow('chatStartMessage','Please enter your name, contact number, and message.');
-  chatShow('chatStartMessage','Sending your inquiry...','success');
-  try{
-    const {data,error}=await satcoSupabase.rpc('create_satco_chat',{p_passenger_name:name,p_contact_no:contact,p_booking_code:booking||null,p_message:message});
-    if(error) throw error;
-    const row=Array.isArray(data)?data[0]:data;
-    const code=row?.inquiry_code;
-    if(!code) throw new Error('Inquiry number was not returned.');
-    satcoChatCode=code; satcoChatContact=contact;
-    localStorage.setItem('satcoChatCode',code); localStorage.setItem('satcoChatContact',contact);
-    document.getElementById('chatResumeCode').value=code; document.getElementById('chatResumeContact').value=contact;
-    await openPassengerConversation();
-  }catch(e){console.error(e);chatShow('chatStartMessage',e.message||'Unable to start the conversation.');}
-}
-async function resumeSatcoChat(){
-  const code=document.getElementById('chatResumeCode').value.trim();
-  const contact=document.getElementById('chatResumeContact').value.trim();
-  if(!code||!contact) return chatShow('chatStartMessage','Enter your Inquiry Number and contact number.');
-  satcoChatCode=code; satcoChatContact=contact;
-  try{
-    const ok=await loadPassengerMessages(true);
-    if(!ok) return;
-    localStorage.setItem('satcoChatCode',code); localStorage.setItem('satcoChatContact',contact);
-    document.getElementById('chatStartArea').classList.add('hidden');
-    document.getElementById('chatConversationArea').classList.remove('hidden');
-    startPassengerChatPolling();
-  }catch(e){console.error(e);chatShow('chatStartMessage',e.message||'Unable to open the conversation.');}
-}
-async function openPassengerConversation(){
-  document.getElementById('chatStartArea').classList.add('hidden');
-  document.getElementById('chatConversationArea').classList.remove('hidden');
-  await loadPassengerMessages(false); startPassengerChatPolling();
-}
-function leavePassengerChat(){
-  document.getElementById('chatConversationArea').classList.add('hidden');
-  document.getElementById('chatStartArea').classList.remove('hidden');
-  if(satcoChatPoll){clearInterval(satcoChatPoll);satcoChatPoll=null;}
-}
-function startPassengerChatPolling(){
-  if(satcoChatPoll) clearInterval(satcoChatPoll);
-  satcoChatPoll=setInterval(()=>{ if(satcoChatCode && document.getElementById('satcoChatModal').style.display==='flex') loadPassengerMessages(false); },5000);
-}
-async function loadPassengerMessages(showNotFound=true){
-  if(!satcoChatCode||!satcoChatContact) return false;
-  const {data,error}=await satcoSupabase.rpc('get_satco_chat',{p_inquiry_code:satcoChatCode,p_contact_no:satcoChatContact});
-  if(error) throw error;
-  const rows=data||[];
-  if(!rows.length){ if(showNotFound) chatShow('chatStartMessage','Conversation not found. Check the Inquiry Number and contact number.'); return false; }
-  const first=rows[0];
-  document.getElementById('chatThreadInfo').innerHTML=`<strong>Inquiry:</strong> ${chatEsc(first.inquiry_code)} &nbsp;|&nbsp; <strong>Status:</strong> ${chatEsc(first.status)}${first.booking_code?`<br><strong>Booking:</strong> ${chatEsc(first.booking_code)}`:''}<br><small>Keep this Inquiry Number so you can return to this conversation.</small>`;
-  const box=document.getElementById('chatMessages');
-  const wasNearBottom=(box.scrollHeight-box.scrollTop-box.clientHeight)<70;
-  box.innerHTML=rows.map(r=>`<div class="chat-row ${r.sender==='ADMIN'?'admin':'passenger'}"><div class="chat-bubble"><strong>${r.sender==='ADMIN'?'SATCO Admin':'You'}</strong><br>${chatEsc(r.message)}<span class="chat-time">${chatEsc(chatDate(r.created_at))}</span></div></div>`).join('');
-  if(wasNearBottom || !box.dataset.loaded) box.scrollTop=box.scrollHeight;
-  box.dataset.loaded='1';
-  const input=document.getElementById('chatNewMessage');
-  const sendBtn=input?.parentElement?.querySelector('button.action.primary');
-  if(first.status==='CLOSED'){ input.disabled=true; input.placeholder='This conversation is closed. Start a new inquiry if needed.'; if(sendBtn)sendBtn.disabled=true; }
-  else{ input.disabled=false; input.placeholder='Type a message to SATCO-Gamay...'; if(sendBtn)sendBtn.disabled=false; }
-  return true;
-}
-async function sendPassengerChat(){
-  const input=document.getElementById('chatNewMessage'); const message=input.value.trim();
-  if(!message) return;
-  try{
-    const {error}=await satcoSupabase.rpc('passenger_send_satco_chat',{p_inquiry_code:satcoChatCode,p_contact_no:satcoChatContact,p_message:message});
-    if(error) throw error;
-    input.value=''; chatClearMsg('chatConversationMessage'); await loadPassengerMessages(false);
-  }catch(e){console.error(e);chatShow('chatConversationMessage',e.message||'Unable to send message.');}
-}
-
-async function adminLoadChats(){
-  const box=document.getElementById('adminChatList'); if(!box)return;
-  box.innerHTML='<span style="color:#64748b">Loading inquiries...</span>';
-  try{
-    const {data,error}=await satcoSupabase.rpc('admin_list_satco_chats'); if(error)throw error;
-    const rows=data||[];
-    box.innerHTML=rows.length?rows.map(r=>`<div class="admin-chat-item" onclick="adminOpenChat('${chatEsc(r.inquiry_code)}')"><strong>${chatEsc(r.passenger_name)}</strong> — ${chatEsc(r.inquiry_code)} ${r.status==='OPEN'?'<span class="chat-unread-dot" title="Open"></span>':''}<div style="font-size:12px;margin-top:3px">${chatEsc(r.contact_no)}${r.booking_code?' • Booking '+chatEsc(r.booking_code):''} • ${chatEsc(r.status)}</div><div class="admin-chat-preview">${r.last_sender==='ADMIN'?'You: ':'Passenger: '}${chatEsc(r.last_message||'')}</div></div>`).join(''):'<span style="color:#64748b">No passenger inquiries yet.</span>';
-  }catch(e){console.error(e);box.innerHTML='<span style="color:#991b1b">Unable to load inquiries.</span>';}
-}
-async function adminOpenChat(code){
-  adminActiveChatCode=code;
-  document.getElementById('adminChatEmpty').classList.add('hidden');
-  document.getElementById('adminChatConversation').classList.remove('hidden');
-  await adminLoadActiveChat();
-  if(adminChatPoll) clearInterval(adminChatPoll);
-  adminChatPoll=setInterval(()=>{ if(adminActiveChatCode && !document.getElementById('adminPanel').classList.contains('hidden')) adminLoadActiveChat(); },5000);
-}
-async function adminLoadActiveChat(){
-  if(!adminActiveChatCode)return;
-  try{
-    const {data,error}=await satcoSupabase.rpc('admin_get_satco_chat',{p_inquiry_code:adminActiveChatCode}); if(error)throw error;
-    const rows=data||[]; if(!rows.length)return;
-    const first=rows[0];
-    document.getElementById('adminChatInfo').innerHTML=`<strong>${chatEsc(first.passenger_name)}</strong> • ${chatEsc(first.contact_no)}<br><strong>Inquiry:</strong> ${chatEsc(first.inquiry_code)}${first.booking_code?` • <strong>Booking:</strong> ${chatEsc(first.booking_code)}`:''} • <strong>Status:</strong> ${chatEsc(first.status)}`;
-    const box=document.getElementById('adminChatMessages');
-    const wasNearBottom=(box.scrollHeight-box.scrollTop-box.clientHeight)<70;
-    box.innerHTML=rows.map(r=>`<div class="chat-row ${r.sender==='ADMIN'?'passenger':'admin'}"><div class="chat-bubble"><strong>${r.sender==='ADMIN'?'You (Admin)':'Passenger'}</strong><br>${chatEsc(r.message)}<span class="chat-time">${chatEsc(chatDate(r.created_at))}</span></div></div>`).join('');
-    if(wasNearBottom || !box.dataset.loaded)box.scrollTop=box.scrollHeight; box.dataset.loaded='1';
-  }catch(e){console.error(e);chatShow('adminChatMessage',e.message||'Unable to load conversation.');}
-}
-async function adminSendChatReply(){
-  const input=document.getElementById('adminChatReply'); const message=input.value.trim();
-  if(!adminActiveChatCode||!message)return;
-  try{
-    const {error}=await satcoSupabase.rpc('admin_send_satco_chat',{p_inquiry_code:adminActiveChatCode,p_message:message}); if(error)throw error;
-    input.value=''; chatClearMsg('adminChatMessage'); await adminLoadActiveChat(); await adminLoadChats();
-  }catch(e){console.error(e);chatShow('adminChatMessage',e.message||'Unable to send reply.');}
-}
-async function adminSetChatStatus(status){
-  if(!adminActiveChatCode)return;
-  try{
-    const {error}=await satcoSupabase.rpc('admin_set_satco_chat_status',{p_inquiry_code:adminActiveChatCode,p_status:status}); if(error)throw error;
-    chatShow('adminChatMessage',status==='CLOSED'?'Conversation closed.':'Conversation reopened.','success'); await adminLoadActiveChat(); await adminLoadChats();
-  }catch(e){console.error(e);chatShow('adminChatMessage',e.message||'Unable to update conversation.');}
-}
-
-</script>
-
 
 <div id="adminLoginModal" class="hidden" style="position:fixed;inset:0;background:rgba(15,23,42,.62);z-index:9999;display:none;align-items:center;justify-content:center;padding:18px">
   <div class="card" style="max-width:430px;width:100%;margin:0">
@@ -1157,8 +865,8 @@ async function adminSetChatStatus(status){
     <input id="adminPassword" type="password" placeholder="Enter password">
     <div id="adminLoginMessage" class="message"></div>
     <div class="actions">
-      <button id="adminLoginSubmit" type="button" class="action primary" onclick="adminLogin()">LOGIN</button>
-      <button type="button" class="action secondary" onclick="closeAdminLogin()">CLOSE</button>
+      <button class="action primary" onclick="adminLogin()">LOGIN</button>
+      <button class="action secondary" onclick="closeAdminLogin()">CLOSE</button>
     </div>
   </div>
 </div>
@@ -1182,17 +890,42 @@ async function adminSetChatStatus(status){
 <script>
 /* SATCO Admin Trip Settings — repaired */
 async function showPasswordResetIfNeeded(){
-  const hash=(window.location.hash||'').toLowerCase();
-  const query=(window.location.search||'').toLowerCase();
-  const recoveryHint=hash.includes('type=recovery') || query.includes('type=recovery') || hash.includes('access_token=');
-  if(!recoveryHint) return;
+  const url=new URL(window.location.href);
+  const hash=url.hash.toLowerCase();
+  const query=url.searchParams;
+  const hasRecoveryHash=hash.includes('type=recovery') || hash.includes('access_token=') || hash.includes('refresh_token=');
+  const code=query.get('code');
+  const errorCode=query.get('error_code');
+  const errorDescription=query.get('error_description');
+  if(errorCode || errorDescription){
+    const msg=document.getElementById('passwordResetMessage');
+    if(msg){ msg.textContent=decodeURIComponent(errorDescription||'The password-reset link is invalid or has expired.'); msg.className='message error'; }
+    const m=document.getElementById('passwordResetModal');
+    if(m){ m.classList.remove('hidden'); m.style.display='flex'; }
+    return;
+  }
+  if(!hasRecoveryHash && !code) return;
   try{
-    const {data}=await satcoSupabase.auth.getSession();
-    if(data?.session){
+    let session=(await satcoSupabase.auth.getSession()).data?.session||null;
+    if(!session && code){
+      const result=await satcoSupabase.auth.exchangeCodeForSession(code);
+      if(result.error) throw result.error;
+      session=result.data?.session||null;
+    }
+    if(session){
       const m=document.getElementById('passwordResetModal');
       if(m){ m.classList.remove('hidden'); m.style.display='flex'; }
+      const msg=document.getElementById('passwordResetMessage');
+      if(msg){ msg.textContent='Create your new SATCO administrator password below.'; msg.className='message'; }
+      window.history.replaceState({},document.title,window.location.pathname);
     }
-  }catch(e){ console.warn('Password recovery session check:',e); }
+  }catch(e){
+    console.warn('Password recovery session check:',e);
+    const msg=document.getElementById('passwordResetMessage');
+    if(msg){ msg.textContent='The reset link could not be verified. Please request a new reset email.'; msg.className='message error'; }
+    const m=document.getElementById('passwordResetModal');
+    if(m){ m.classList.remove('hidden'); m.style.display='flex'; }
+  }
 }
 
 async function saveNewAdminPassword(){
@@ -1205,7 +938,7 @@ async function saveNewAdminPassword(){
   try{
     const {data,error}=await satcoSupabase.auth.updateUser({password:p});
     if(error) throw error;
-    msg.textContent='Password changed successfully. You can now use Admin / Trip Settings.';
+    msg.textContent='Password changed successfully. Click OK, then use Admin / Trip Settings with your new password.';
     msg.className='message success';
     document.getElementById('newAdminPassword').value='';
     document.getElementById('confirmAdminPassword').value='';
@@ -1236,62 +969,30 @@ function closeAdminLogin(){
   m.classList.add("hidden");
   m.style.display="none";
 }
-document.getElementById("adminPassword")?.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){ e.preventDefault(); adminLogin(); }
-});
 function adminMsg(msg, type="success"){
   const e=document.getElementById("adminMessage");
   if(e){ e.textContent=msg; e.className="message "+type; }
 }
 async function adminLogin(){
-  const emailEl=document.getElementById("adminEmail");
-  const passwordEl=document.getElementById("adminPassword");
+  const email=document.getElementById("adminEmail").value.trim();
+  const password=document.getElementById("adminPassword").value;
   const msg=document.getElementById("adminLoginMessage");
-  const loginBtn=document.getElementById("adminLoginSubmit");
-  const email=(emailEl?.value||"").trim();
-  const password=passwordEl?.value||"";
-
-  const showLoginMessage=(text,type="error")=>{
-    if(!msg) return;
-    msg.textContent=text;
-    msg.className="message "+type;
-    msg.style.display="block";
-  };
-
-  if(!email||!password){
-    showLoginMessage("Please enter your admin email and password.","error");
-    return;
-  }
-
-  if(loginBtn){ loginBtn.disabled=true; loginBtn.textContent="LOGGING IN..."; }
-  showLoginMessage("Connecting to SATCO administrator account...","success");
-
+  if(!email||!password){ if(msg) msg.textContent="Please enter your admin email and password."; return; }
+  if(msg) msg.textContent="Signing in...";
   try{
     const {data,error}=await satcoSupabase.auth.signInWithPassword({email,password});
     if(error) throw error;
-    if(!data?.user) throw new Error("Supabase did not return an administrator session.");
-
-    // Preferred check: secure database function already used by the SATCO admin dashboard.
-    let isAdmin=false;
-    const rpcResult=await satcoSupabase.rpc("is_satco_admin");
-    if(!rpcResult.error){
-      isAdmin=rpcResult.data===true;
-    }else{
-      // Fallback for older database versions.
-      const {data:admins,error:ae}=await satcoSupabase.from("satco_admins").select("*").limit(50);
-      if(ae) throw rpcResult.error || ae;
-      isAdmin=(admins||[]).some(a =>
-        String(a.email||"").toLowerCase()===email.toLowerCase() ||
-        String(a.user_id||a.auth_user_id||a.id||"")===String(data.user.id||"")
-      );
-    }
-
-    if(!isAdmin){
+    // Verify the account is an administrator using the existing admin table when available.
+    const {data:admins,error:ae}=await satcoSupabase.from("satco_admins").select("*").limit(20);
+    if(ae) throw ae;
+    const ok=(admins||[]).some(a =>
+      String(a.email||"").toLowerCase()===email.toLowerCase() ||
+      String(a.user_id||a.auth_user_id||a.id||"")===String(data.user?.id||"")
+    );
+    if(!ok){
       await satcoSupabase.auth.signOut();
       throw new Error("This account is not registered as a SATCO administrator.");
     }
-
-    showLoginMessage("Login successful. Opening Admin / Trip Settings...","success");
     closeAdminLogin();
     document.getElementById("adminLoginBtn")?.classList.add("hidden");
     document.getElementById("adminLogoutBtn")?.classList.remove("hidden");
@@ -1300,27 +1001,16 @@ async function adminLogin(){
     adminMsg("Admin mode is ON. You can now manage trip dates and times.");
     document.getElementById("adminPanel")?.scrollIntoView({behavior:"smooth"});
   }catch(e){
-    console.error("SATCO admin login:",e);
-    const raw=(e?.message||"Admin login failed.");
-    const low=raw.toLowerCase();
-    if(low.includes("invalid login credentials")){
-      showLoginMessage("Email or password is not accepted. If you recently reset your password, use the new password.","error");
-    }else if(low.includes("email not confirmed")){
-      showLoginMessage("This administrator email is not yet confirmed in Supabase.","error");
-    }else{
-      showLoginMessage(raw,"error");
-    }
-  }finally{
-    if(loginBtn){ loginBtn.disabled=false; loginBtn.textContent="LOGIN"; }
+    console.error(e);
+    if(msg) msg.textContent=e.message||"Admin login failed.";
   }
 }
 function syncAdminTripTime(){
-  const n=Number(document.getElementById("adminTripNumber")?.value||0);
+  const n=Number(document.getElementById("adminTripNumber")?.value||1);
   const route=document.getElementById("adminRoute")?.value||"";
   const times={1:"04:00",2:"04:30",3:"05:00",4:"05:30"};
   const e=document.getElementById("adminTime"); if(!e) return;
-  const numbered=isGamayOrigin(route) && n>=1 && n<=4;
-  if(numbered){ e.value=times[n]; e.readOnly=true; }
+  if(route==="Gamay - Catarman") { e.value=times[n]||"04:00"; e.readOnly=true; }
   else { e.readOnly=false; }
 }
 function adminClearForm(){
@@ -1350,13 +1040,12 @@ async function adminLoadTrips(){
   box.textContent="Loading trips...";
   const {data,error}=await satcoSupabase.from("satco_trips")
     .select("id,trip_date,departure_time,route,van_no,driver_name,status,trip_number,booking_open")
-    .eq("status","scheduled")
     .order("trip_date",{ascending:true}).order("departure_time",{ascending:true});
   if(error){ box.textContent=error.message; return; }
   box.innerHTML=(data||[]).map(t=>`
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #ddd;padding:8px 0">
       <strong>${t.trip_date}</strong> ${String(t.departure_time||"").slice(0,5)}
-      — ${t.route} — ${t.van_no} — ${isGamayOrigin(t.route) && Number(t.trip_number)>=1 && Number(t.trip_number)<=4 ? tripLabel(t.trip_number) : "TIME ONLY"} — ${t.booking_open ? "🟢 OPEN" : "🔴 CLOSED"}
+      — ${t.route} — ${t.van_no} — Trip ${t.trip_number||"-"} — ${t.booking_open ? "🟢 OPEN" : "🔴 CLOSED"}
       <button class="action secondary" style="padding:5px 9px" onclick='adminSelectTrip(${JSON.stringify(t)})'>EDIT</button>
     </div>`).join("") || "No trips found.";
 }
@@ -1364,7 +1053,7 @@ function adminSelectTrip(t){
   adminEditingTripId=t.id;
   document.getElementById("adminDate").value=t.trip_date||"";
   document.getElementById("adminTime").value=String(t.departure_time||"").slice(0,5);
-  document.getElementById("adminTripNumber").value=(Number(t.trip_number)>=1 && Number(t.trip_number)<=4) ? String(t.trip_number) : "0";
+  document.getElementById("adminTripNumber").value=String(t.trip_number||1);
   document.getElementById("adminRoute").value=t.route||"";
   document.getElementById("adminVan").value=t.van_no||"";
   syncAdminTripTime();
@@ -1372,12 +1061,10 @@ function adminSelectTrip(t){
 }
 async function adminSaveTrip(){
   const date=document.getElementById("adminDate").value;
-  const selectedTripNumber=Number(document.getElementById("adminTripNumber").value);
+  const tripNumber=Number(document.getElementById("adminTripNumber").value);
   const timeMap={1:"04:00",2:"04:30",3:"05:00",4:"05:30"};
+  const time=timeMap[tripNumber];
   const route=document.getElementById("adminRoute").value;
-  const numbered=isGamayOrigin(route) && selectedTripNumber>=1 && selectedTripNumber<=4;
-  const tripNumber=numbered ? selectedTripNumber : null;
-  const time=numbered ? timeMap[selectedTripNumber] : document.getElementById("adminTime").value;
   const van=document.getElementById("adminVan").value;
   if(!date||!time||!route||!van) return adminMsg("Please complete Date, Time, Route and Van.","error");
   const {data:userData}=await satcoSupabase.auth.getUser();
@@ -1396,38 +1083,24 @@ async function adminSaveTrip(){
 async function adminUpdateTrip(){
   if(!adminEditingTripId) return adminMsg("First click EDIT beside the trip you want to change.","error");
   const date=document.getElementById("adminDate").value;
-  const selectedTripNumber=Number(document.getElementById("adminTripNumber").value);
+  const tripNumber=Number(document.getElementById("adminTripNumber").value);
   const timeMap={1:"04:00",2:"04:30",3:"05:00",4:"05:30"};
+  const time=timeMap[tripNumber];
   const route=document.getElementById("adminRoute").value;
-  const numbered=isGamayOrigin(route) && selectedTripNumber>=1 && selectedTripNumber<=4;
-  const tripNumber=numbered ? selectedTripNumber : null;
-  const time=numbered ? timeMap[selectedTripNumber] : document.getElementById("adminTime").value;
   const van=document.getElementById("adminVan").value;
   if(!date||!time||!route||!van) return adminMsg("Please complete Date, Time, Route and Van.","error");
   const {error}=await satcoSupabase.from("satco_trips").update({
     trip_date:date, departure_time:time, route, van_no:van,
-    driver_name:"ROD CLACITO COJEDA", driver_contact:"09976854404", trip_number:tripNumber,
-    status:"scheduled", booking_open:true
+    driver_name:"ROD CLACITO COJEDA", driver_contact:"09976854404", trip_number:tripNumber
   }).eq("id",adminEditingTripId);
   if(error) return adminMsg(error.message,"error");
-  adminMsg("Trip updated successfully and is now OPEN for passenger booking.");
+  adminMsg("Trip updated successfully.");
   adminEditingTripId=null; await adminLoadTrips(); if(typeof loadTripChooser==="function") await loadTripChooser();
 }
-async function adminFinishTrip(){
-  if(!adminEditingTripId) return adminMsg("First click EDIT beside the trip you want to mark as finished.","error");
-  if(!confirm("Mark this trip as FINISHED? It will disappear from the active schedule, but its booking records will be kept.")) return;
-  const {error}=await satcoSupabase.from("satco_trips").update({status:"completed",booking_open:false}).eq("id",adminEditingTripId);
-  if(error) return adminMsg(error.message,"error");
-  adminMsg("Trip marked as FINISHED. It has been removed from the active schedule.");
-  adminEditingTripId=null;
-  await adminLoadTrips();
-  if(typeof loadTripChooser==="function") await loadTripChooser();
-}
-
 async function adminCancelTrip(){
   if(!adminEditingTripId) return adminMsg("First click EDIT beside the trip you want to cancel.","error");
   if(!confirm("Cancel this trip?")) return;
-  const {error}=await satcoSupabase.from("satco_trips").update({status:"cancelled",booking_open:false}).eq("id",adminEditingTripId);
+  const {error}=await satcoSupabase.from("satco_trips").update({status:"cancelled"}).eq("id",adminEditingTripId);
   if(error) return adminMsg(error.message,"error");
   adminMsg("Trip cancelled successfully.");
   adminEditingTripId=null; await adminLoadTrips(); if(typeof loadTripChooser==="function") await loadTripChooser();
@@ -1437,49 +1110,38 @@ async function adminCancelTrip(){
 
 <script>
 // Password recovery handler: the Supabase recovery link returns to this page.
-satcoSupabase.auth.onAuthStateChange((event) => {
+satcoSupabase.auth.onAuthStateChange((event, session) => {
   if(event === 'PASSWORD_RECOVERY'){
     const m=document.getElementById('passwordResetModal');
     if(m){m.classList.remove('hidden');m.style.display='flex';}
+    const msg=document.getElementById('passwordResetMessage');
+    if(msg){ msg.textContent='Create your new SATCO administrator password below.'; msg.className='message'; }
   }
 });
-setTimeout(showPasswordResetIfNeeded, 500);
+showPasswordResetIfNeeded();
+setTimeout(showPasswordResetIfNeeded, 1200);
+setTimeout(showPasswordResetIfNeeded, 3000);
 </script>
 
 
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('tripDateChooser')?.addEventListener('change',()=>{ populateTripNumbers(); });
+  document.getElementById('tripDateChooser')?.addEventListener('change',async()=>{
+    document.getElementById('tripNumberChooser').value='';
+    currentTripId=null; currentTrip=null; onlineBookings=[]; selectedSeat=null;
+    document.getElementById('date').value='';
+    document.getElementById('time').value='';
+    document.getElementById('route').value='';
+    document.getElementById('van').innerHTML='<option value="">Select Van / Plate Number</option>';
+    document.getElementById('selectedSeat').textContent='None';
+    document.getElementById('tripStatus').textContent='Choose a trip for this date.';
+    populateTripNumbers(); renderSeats(); renderBookingList();
+  });
   document.getElementById('tripNumberChooser')?.addEventListener('change',chooseTripNumber);
   document.getElementById('adminTripNumber')?.addEventListener('change',syncAdminTripTime);
   document.getElementById('adminRoute')?.addEventListener('change',syncAdminTripTime);
   syncAdminTripTime();
-  document.getElementById('route')?.addEventListener('change',()=>{ populateTripNumbers(); chooseTripFromRouteOrVan(); });
 });
-</script>
-<script>
-// SATCO-Gamay Admin Login — click handler repair
-(function(){
-  function wireAdminLogin(){
-    const btn=document.querySelector('#adminLoginModal button.action.primary');
-    if(!btn) return;
-    btn.type='button';
-    btn.onclick=null;
-    btn.addEventListener('click',function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      if(typeof window.adminLogin==='function'){
-        window.adminLogin();
-      }else{
-        const msg=document.getElementById('adminLoginMessage');
-        if(msg){ msg.textContent='Admin login is still loading. Please refresh the page once.'; msg.className='message error'; }
-      }
-    });
-  }
-  window.adminLogin=adminLogin;
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wireAdminLogin,{once:true});
-  else wireAdminLogin();
-})();
 </script>
 </body>
 </html>
