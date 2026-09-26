@@ -27,6 +27,28 @@ h2{font-size:19px;margin:0 0 14px;color:var(--green2)}
 label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}
 input,select,textarea{width:100%;padding:11px;border:1px solid var(--border);border-radius:9px;background:#fff;font:inherit}
 textarea{min-height:85px;resize:vertical}
+.route-picker{position:relative}
+.route-menu{display:none;position:absolute;z-index:10020;left:0;right:0;top:calc(100% + 5px);max-height:250px;overflow-y:auto;background:#fff;border:2px solid var(--green);border-radius:10px;box-shadow:0 8px 24px rgba(15,23,42,.22);padding:5px}
+.route-menu.open{display:block}
+.route-option{display:block;width:100%;border:0;border-bottom:1px solid #e2e8f0;background:#fff;color:#0f172a;text-align:left;padding:12px 11px;font:inherit;font-weight:700;cursor:pointer}
+.route-option:last-child{border-bottom:0}.route-option:active,.route-option:hover{background:#ecfeff;color:#115e59}
+.location-picker{position:relative}
+.location-picker input{padding-right:52px}
+.location-toggle{position:absolute;right:1px;top:1px;bottom:1px;width:48px;border:0;border-radius:0 8px 8px 0;background:#fff;color:#0f172a;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.location-toggle:focus{outline:3px solid rgba(15,118,110,.22);outline-offset:-3px}
+.location-menu{display:none;position:absolute;z-index:10030;left:0;right:0;top:calc(100% + 5px);max-height:270px;overflow-y:auto;background:#fff;border:2px solid var(--green);border-radius:10px;box-shadow:0 10px 28px rgba(15,23,42,.25);padding:5px}
+.location-menu.open{display:block}
+.location-option{display:block;width:100%;border:0;border-bottom:1px solid #e2e8f0;background:#fff;color:#0f172a;text-align:left;padding:13px 11px;font:inherit;font-weight:700;cursor:pointer}
+.location-option:last-child{border-bottom:0}.location-option:active,.location-option:hover,.location-option:focus{background:#ecfeff;color:#115e59;outline:none}
+.location-help{margin-top:5px;color:var(--muted);font-size:11px;font-weight:600}
+.guide-open{width:100%;border:2px solid var(--green);background:#ecfdf5;color:#115e59;border-radius:11px;padding:14px;font-size:16px;font-weight:800;cursor:pointer;margin:0 0 14px}
+.guide-open:focus-visible,.guide-close:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+.guide-dialog{border:0;border-radius:16px;padding:0;width:min(680px,calc(100% - 22px));max-height:88dvh;box-shadow:0 20px 60px rgba(15,23,42,.4);color:#0f172a}
+.guide-dialog::backdrop{background:rgba(15,23,42,.65)}
+.guide-body{padding:18px 22px 26px;max-height:88dvh;overflow:auto;font-size:16px;line-height:1.55}
+.guide-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:-18px;background:#fff;padding:14px 0 10px;border-bottom:1px solid #cbd5e1;z-index:1}
+.guide-head h2{margin:0;font-size:22px}.guide-close{border:0;border-radius:9px;background:#e2e8f0;color:#0f172a;padding:9px 14px;font-size:16px;font-weight:800;cursor:pointer}
+.guide-body h3{font-size:18px;color:#115e59;margin:20px 0 6px}.guide-body ol,.guide-body ul{padding-left:25px;margin:7px 0 14px}.guide-body li{margin:8px 0}.guide-body p{margin:8px 0}.guide-body strong{color:#0f172a}
 .required{color:var(--danger)}
 .info{background:#ecfeff;border-left:4px solid var(--green);padding:10px;border-radius:8px;font-size:13px;margin-top:12px}
 .seat-map{max-width:460px;margin:auto;background:#e2e8f0;border:3px solid #94a3b8;border-radius:20px;padding:15px}
@@ -119,8 +141,23 @@ input[type="text"], input[type="search"], textarea {
     <button class="tab active" id="regularTab" onclick="switchTab('regular')">REGULAR TRIP</button>
     <button class="tab" id="specialTab" onclick="switchTab('special')">SPECIAL TRIP</button>
   </div>
+  <button type="button" class="guide-open" onclick="openPassengerGuide()">📖 HOW TO BOOK — PASSENGER GUIDE</button>
   <div style="text-align:right;margin:8px 0 12px">
-    <button id="adminLoginBtn" class="action secondary" style="font-size:13px;padding:9px 14px" onclick="openAdminLogin()">🔐 ADMIN / TRIP SETTINGS</button>
+    <details id="adminLoginDetails" style="margin-left:auto;max-width:460px">
+<summary id="adminLoginBtn" class="action secondary" style="font-size:13px;padding:9px 14px;cursor:pointer;list-style:none;display:inline-block">🔐 ADMIN / TRIP SETTINGS</summary>
+<div class="card" style="margin-top:8px;text-align:left">
+<h2>🔐 Admin Login</h2>
+<div class="info">Use your SATCO administrator Supabase account. Passengers do not need to log in.</div>
+<label style="margin-top:12px">Admin Email</label>
+<input id="adminEmailNative" type="email" placeholder="Enter admin email">
+<label style="margin-top:10px">Password</label>
+<input id="adminPasswordNative" type="password" placeholder="Enter password">
+<div id="adminLoginMessageNative" class="message"></div>
+<div class="actions">
+<button id="adminLoginSubmitNative" type="button" class="action primary">LOGIN</button>
+</div>
+</div>
+</details>
     <button id="adminLogoutBtn" class="action danger hidden" style="font-size:13px;padding:9px 14px" onclick="adminLogout()">LOG OUT ADMIN</button>
   </div>
 
@@ -136,22 +173,16 @@ input[type="text"], input[type="search"], textarea {
       <div><label>Trip <span class="required">*</span></label><select id="adminTripNumber"><option value="1">1st Trip</option><option value="2">2nd Trip</option><option value="3">3rd Trip</option><option value="4">4th Trip</option><option value="0">FREE / ADDITIONAL TRIP — Admin sets time</option></select></div>
       <div><label>Departure Time</label><input id="adminTime" type="time"></div>
       <div><label>Route <span class="required">*</span></label>
-        <select id="adminRoute">
-          <option value="">Select route</option>
-          <option>Gamay - Catarman</option><option>Catarman - Gamay</option>
-          <option>Catarman - Palapag</option><option>Palapag - Catarman</option>
-          <option>Gamay - Palapag</option><option>Palapag - Gamay</option>
-          <option>Gamay - Mapanas</option><option>Mapanas - Gamay</option>
-          <option>Gamay - Laoang</option><option>Laoang - Gamay</option>
-          <option>Gamay - Lapinig</option><option>Lapinig - Gamay</option>
-          <option>Gamay - Tacloban</option><option>Tacloban - Gamay</option>
-          <option>Manila - Gamay</option><option>Gamay - Manila</option>
-        </select>
+        <div class="route-picker">
+          <input id="adminRoute" type="text" autocomplete="off" placeholder="Select or type route, e.g. Gamay - Calbayog" aria-haspopup="listbox" aria-expanded="false">
+          <div id="adminRouteMenu" class="route-menu" role="listbox" aria-label="Suggested routes"></div>
+        </div>
+        <small style="color:#64748b">Choose a suggestion or type any new origin and destination.</small>
       </div>
       <div><label>Van / Plate Number <span class="required">*</span></label>
         <select id="adminVan">
           <option value="">Select van</option>
-          <option>LAU 5041</option><option>LAU 5042</option><option>LAU 5043</option>
+          <option>LAU 5140</option>
         </select>
       </div>
     </div>
@@ -162,7 +193,7 @@ input[type="text"], input[type="search"], textarea {
 
     <div id="adminMessage" class="message"></div>
     <div class="actions" style="margin-top:12px">
-      <button class="action primary" onclick="adminSaveTrip()">SAVE NEW TRIP</button>
+      <button id="adminSaveTripBtn" class="action primary" onclick="adminSaveTrip()">SAVE NEW TRIP</button>
       <button class="action warning" onclick="adminUpdateTrip()">UPDATE SELECTED TRIP</button>
       <button class="action primary" onclick="adminSetBookingOpen(true)">OPEN FOR BOOKING</button>
       <button class="action secondary" onclick="adminSetBookingOpen(false)">CLOSE BOOKING</button>
@@ -248,9 +279,7 @@ input[type="text"], input[type="search"], textarea {
         </div>
         <div><label>Van / Plate Number <span class="required">*</span></label>
           <select id="van" onchange="renderSeats()">
-            <option value="LAU 5041">LAU 5041 — Main Unit</option>
-            <option value="LAU 5042">LAU 5042 — Reserve Unit</option>
-            <option value="LAU 5043">LAU 5043 — Reserve Unit</option>
+            <option value="LAU 5140">LAU 5140</option>
           </select>
         </div>
       </div>
@@ -272,16 +301,28 @@ input[type="text"], input[type="search"], textarea {
         <span><i class="dot selected-dot"></i>Selected</span>
         <span><i class="dot booked-dot"></i>Booked</span>
       </div>
-      <div class="info">Selected seat: <strong id="selectedSeat">None</strong></div>
+      <div class="info">Selected seat(s): <strong id="selectedSeat">None</strong></div>
     </div>
 
     <div class="card">
       <h2>3. Passenger Information</h2>
+      <div style="margin-bottom:12px">
+        <label>Number of Passengers <span class="required">*</span></label>
+        <select id="passengerCount" onchange="satcoSetPassengerCount()">
+          <option value="1">1 Passenger</option>
+          <option value="2">2 Passengers</option>
+          <option value="3">3 Passengers</option>
+          <option value="4">4 Passengers</option>
+          <option value="5">5 Passengers</option>
+        </select>
+        <div class="info" style="margin-top:8px">Choose 1–5 passengers, then select the same number of available seats.</div>
+      </div>
+      <div id="groupPassengerNames"></div>
       <div class="grid">
-        <div><label>Passenger Name <span class="required">*</span></label><input id="name" type="text" placeholder="Full name"></div>
+        <div style="display:none"><label>Passenger Name</label><input id="name" type="text"></div>
         <div><label>Contact Number <span class="required">*</span></label><input id="contact" type="tel" placeholder="09XXXXXXXXX"></div>
-        <div><label>Pick-Up Point</label><input id="pickup" list="locations" placeholder="Select or type"></div>
-        <div><label>Drop-Off Point</label><input id="dropoff" list="locations" placeholder="Select or type"></div>
+        <div><label>Pick-Up Point <span class="required">*</span></label><div class="location-picker"><input id="pickup" type="text" autocomplete="off" placeholder="Select or type" aria-haspopup="listbox" aria-expanded="false"><button type="button" class="location-toggle" aria-label="Show pick-up point choices" data-location-for="pickup">▼</button><div class="location-menu" id="pickupMenu" role="listbox"></div></div><div class="location-help">Tap ▼ to select, or type another place.</div></div>
+        <div><label>Drop-Off Point <span class="required">*</span></label><div class="location-picker"><input id="dropoff" type="text" autocomplete="off" placeholder="Select or type" aria-haspopup="listbox" aria-expanded="false"><button type="button" class="location-toggle" aria-label="Show drop-off point choices" data-location-for="dropoff">▼</button><div class="location-menu" id="dropoffMenu" role="listbox"></div></div><div class="location-help">Tap ▼ to select, or type another place.</div></div>
         <div><label>Payment Method <span class="required">*</span></label>
           <select id="payment" onchange="toggleGCash('regular')">
             <option value="">Select payment method</option>
@@ -310,18 +351,17 @@ input[type="text"], input[type="search"], textarea {
 
     <div class="card">
       <h2>4. Cancel a Booking</h2>
-      <div class="info">If you need to cancel a booking made on this device, enter the booking number below. Cancelled seats become available again.</div>
+      <div class="info">To cancel a booking, enter the Booking Number below. Cancelled seats become available again.</div>
       <div class="grid" style="margin-top:12px">
         <div><label>Booking Number</label><input id="cancelBookingId" placeholder="e.g. SATCO-12345678"></div>
-        <div><label>Contact Number</label><input id="cancelContact" type="tel" placeholder="Same number used for booking"></div>
       </div>
       <div id="cancelMessage" class="message"></div>
+      <div id="cancelBookingItems" class="hidden" style="margin-top:12px"></div>
       <div class="actions">
         <button class="action danger" onclick="cancelBooking()">CANCEL BOOKING</button>
         <button class="action secondary" onclick="clearCancel()">CLEAR</button>
-        <button class="action warning" onclick="clearAllBookings()">ADMIN CLEAR ALL BOOKINGS</button>
       </div>
-      <div id="bookingList" class="booking-list"></div>
+      <div id="bookingList" class="booking-list hidden" aria-hidden="true"></div>
     </div>
 
     <div id="confirmation" class="card confirmation">
@@ -346,7 +386,7 @@ input[type="text"], input[type="search"], textarea {
         <div><label>Destination <span class="required">*</span></label><input id="sDestination" list="locations"></div>
         <div><label>Number of Passengers <span class="required">*</span></label><input id="sPassengers" type="number" min="1" max="14" placeholder="Maximum 14"></div>
         <div><label>Preferred Van <span class="required">*</span></label>
-          <select id="sVan"><option value="">Select van</option><option>LAU 5041</option><option>LAU 5042</option><option>LAU 5043</option></select>
+          <select id="sVan"><option value="">Select van</option><option>LAU 5140</option></select>
         </div>
         <div><label>Return Trip?</label><select id="sReturn" onchange="toggleReturn()"><option>No</option><option>Yes</option></select></div>
         <div id="returnDateBox" class="hidden"><label>Return Date</label><input id="sReturnDate" type="date"></div>
@@ -376,10 +416,59 @@ input[type="text"], input[type="search"], textarea {
   <option value="Gamay Integrated Transport Terminal"><option value="Anito"><option value="Mapanas">
   <option value="Rawis"><option value="Palapag"><option value="Pambujan"><option value="San Roque">
   <option value="Mondragon"><option value="Catarman"><option value="Catarman Terminal">
-  <option value="SATCO Booking Terminal-Catarman"><option value="UEP">
+  <option value="SATCO Booking Terminal-Catarman"><option value="UEP"><option value="Calbayog">
 </datalist>
 
+<datalist id="routeSuggestions">
+  <option value="Gamay - Catarman"><option value="Catarman - Gamay">
+  <option value="Gamay - Calbayog"><option value="Calbayog - Gamay">
+  <option value="Gamay - Palapag"><option value="Palapag - Gamay">
+  <option value="Gamay - Mapanas"><option value="Mapanas - Gamay">
+  <option value="Gamay - Laoang"><option value="Laoang - Gamay">
+  <option value="Gamay - Lapinig"><option value="Lapinig - Gamay">
+  <option value="Gamay - Tacloban"><option value="Tacloban - Gamay">
+  <option value="Gamay - Manila"><option value="Manila - Gamay">
+</datalist>
+
+<dialog id="passengerGuide" class="guide-dialog" aria-labelledby="passengerGuideTitle">
+  <div class="guide-body">
+    <div class="guide-head"><h2 id="passengerGuideTitle">SATCO Passenger Booking Guide</h2><button type="button" class="guide-close" onclick="closePassengerGuide()" aria-label="Close passenger guide">✕ CLOSE</button></div>
+    <p>Follow these simple steps to book a regular trip on your cellphone or computer. Passengers do not need an admin account.</p>
+    <h3>Book a regular trip</h3>
+    <ol>
+      <li><strong>Choose a date and trip.</strong> Under “Choose Your Trip,” select an available date, then choose the trip. Check the departure time, route and van plate number.</li>
+      <li><strong>Choose your seats.</strong> Green means available, orange means selected, and red means booked. You can book 1–5 passengers; select the same number of green seats.</li>
+      <li><strong>Enter passenger information.</strong> Type the full name of each passenger and one active contact number.</li>
+      <li><strong>Set Pick-Up and Drop-Off Points.</strong> Tap the ▼ arrow to choose a saved location, or type another place in the field.</li>
+      <li><strong>Choose payment.</strong> Select “Payment Upon Boarding,” or select “GCASH” and upload a clear payment screenshot using the instructions shown on the booking page.</li>
+      <li><strong>Submit once.</strong> Review the details and tap “SUBMIT BOOKING” only once. Wait for the booking confirmation; do not close the page while it is submitting.</li>
+      <li><strong>Save your booking number.</strong> Take a screenshot or write it down. You will need it if you cancel or ask about your booking.</li>
+    </ol>
+    <h3>Cancel a booking</h3>
+    <p>Go to “Cancel a Booking,” enter the exact booking number, and tap “CANCEL BOOKING.” For a group booking, follow the options shown to choose which passenger or seat to cancel. Wait for the cancellation confirmation.</p>
+    <h3>Special trip and help</h3>
+    <p>Use “SPECIAL TRIP” to request private van hire; the request is subject to SATCO confirmation. Tap “CHAT / INQUIRY” if you need help with schedules, pick-up points or an existing booking.</p>
+    <p><strong>Before traveling:</strong> Keep your booking number and payment proof, check your trip time, and arrive at the agreed pick-up point before departure.</p>
+    <button type="button" class="action primary" onclick="closePassengerGuide()">BACK TO BOOKING</button>
+  </div>
+</dialog>
+
 <footer>SATCO-Gamay Online Passenger Booking System • Passenger interface</footer>
+
+<script>
+function openPassengerGuide(){
+  const guide=document.getElementById("passengerGuide");
+  if(guide && !guide.open) guide.showModal();
+}
+function closePassengerGuide(){
+  const guide=document.getElementById("passengerGuide");
+  if(guide && guide.open) guide.close();
+}
+document.addEventListener("click",function(e){
+  const guide=document.getElementById("passengerGuide");
+  if(guide && e.target===guide) guide.close();
+});
+</script>
 
 
 <script>
@@ -393,13 +482,43 @@ let uploadedReceiptPath = null;
 
 <script>
 const DRIVERS = {
-  "LAU 5041": ["ROD CLACITO COJEDA","09976854404"],
-  "LAU 5042": ["ALLAN ASTORIANO","09277374041"],
-  "LAU 5043": ["AL XYRJU C. ASTORIANO","09050961701"]
+  "LAU 5140": ["ROD CLACITO COJEDA","09976854404"]
 };
+const SATCO_PLATE_NUMBER = "LAU 5140";
+
+function satcoPassengerCount(){
+  return Math.max(1,Math.min(5,Number(document.getElementById("passengerCount")?.value||1)));
+}
+function satcoSetPassengerCount(){
+  const n=satcoPassengerCount();
+  if(selectedSeats.length>n) selectedSeats=selectedSeats.slice(0,n);
+  selectedSeat=selectedSeats[0]||null;
+  const box=document.getElementById("groupPassengerNames");
+  if(box){
+    let html='<div class="grid">';
+    for(let i=1;i<=n;i++){
+      html+=`<div><label>Passenger ${i} Name <span class="required">*</span></label><input id="groupPassengerName${i}" type="text" placeholder="Full name of passenger ${i}"></div>`;
+    }
+    html+='</div>';
+    box.innerHTML=html;
+  }
+  satcoUpdateSelectedSeatText();
+  renderSeats();
+}
+function satcoGroupNames(){
+  const a=[];
+  for(let i=1;i<=satcoPassengerCount();i++) a.push((document.getElementById("groupPassengerName"+i)?.value||"").trim().toUpperCase());
+  return a;
+}
+function satcoUpdateSelectedSeatText(){
+  const el=document.getElementById("selectedSeat");
+  if(el) el.textContent=selectedSeats.length ? selectedSeats.map(x=>"Seat "+x).join(", ") : "None";
+}
+
 let selectedSeat = null;
-let regularReceipt = "";
-let specialReceipt = "";
+let selectedSeats = [];
+let regularReceipt = null;
+let specialReceipt = null;
 
 function switchTab(tab) {
   document.getElementById("regular").classList.toggle("hidden", tab !== "regular");
@@ -408,7 +527,8 @@ function switchTab(tab) {
   document.getElementById("specialTab").classList.toggle("active", tab === "special");
 }
 function updateDriver() {
-  const d = DRIVERS[document.getElementById("van").value];
+  const vanValue=document.getElementById("van")?.value || "LAU 5140";
+  const d = DRIVERS[vanValue] || DRIVERS["LAU 5140"] || ["ROD CLACITO COJEDA","09976854404"];
   document.getElementById("driverName").textContent = d[0];
   document.getElementById("driverPhone").textContent = d[1];
   document.getElementById("driverSeat").textContent = d[0] + " • " + d[1];
@@ -446,7 +566,9 @@ async function loadTripChooser() {
     const todayISO=satcoTodayLocalISO();
     // Passenger page: never show a trip whose travel date has already passed.
     // Admin/database history is preserved; this filter affects passenger choices only.
-    const trips=(data || []).filter(t => String(t.trip_date || "") >= todayISO);
+    const trips=(data || [])
+      .filter(t => String(t.trip_date || "") >= todayISO)
+      .map(t => ({...t, database_van_no:t.van_no, van_no:SATCO_PLATE_NUMBER}));
     window.satcoScheduledTrips = trips;
     const statusBox=document.getElementById("tripStatus");
     if(statusBox) statusBox.textContent=`Schedule synchronized: ${trips.length} current/upcoming OPEN trip(s) available online.`;
@@ -583,7 +705,7 @@ function applyChosenTrip(tripId) {
 
 async function selectTripById(tripId) {
   if (!tripId) {
-    currentTripId = null; currentTrip = null; onlineBookings = []; selectedSeat = null;
+    currentTripId = null; currentTrip = null; onlineBookings = []; selectedSeat = null; selectedSeats = [];
     ["date","time","route"].forEach(id => document.getElementById(id).value = "");
     document.getElementById("van").value = "";
     document.getElementById("selectedSeat").textContent = "None";
@@ -599,15 +721,21 @@ async function selectTripById(tripId) {
       currentTrip = null;
       onlineBookings = [];
       selectedSeat = null;
+      selectedSeats = [];
       await loadTripChooser();
       renderSeats();
       renderBookingList();
       throw new Error("This trip is no longer open for passenger booking.");
     }
 
+    data.database_van_no=data.van_no;
+    data.van_no=SATCO_PLATE_NUMBER;
+    data.driver_name=DRIVERS[SATCO_PLATE_NUMBER][0];
+    data.driver_contact=DRIVERS[SATCO_PLATE_NUMBER][1];
     currentTrip = data;
     currentTripId = data.id;
     selectedSeat = null;
+    selectedSeats = [];
 
     document.getElementById("date").value = data.trip_date || "";
     document.getElementById("time").value = (data.departure_time || "").slice(0,5);
@@ -621,7 +749,7 @@ async function selectTripById(tripId) {
       opt.textContent = data.van_no;
       vanSelect.appendChild(opt);
     }
-    vanSelect.value = data.van_no || "LAU 5041";
+    vanSelect.value = data.van_no || "LAU 5140";
 
     document.getElementById("selectedSeat").textContent = "None";
     updateDriver();
@@ -651,7 +779,6 @@ async function findCurrentTrip() {
     .eq("trip_date", date)
     .eq("departure_time", time)
     .eq("route", route)
-    .eq("van_no", van)
     .eq("status", "scheduled")
     .eq("booking_open", true)
     .limit(1)
@@ -712,53 +839,84 @@ async function refreshOnlineTrip() {
 
 function renderSeats() {
   updateDriver();
-  const box = document.getElementById("seats");
-  const summary = document.getElementById("seatSummary");
-  if (!box) return;
-  box.innerHTML = "";
-  const bookings = onlineBookings.filter(x => x.status !== "Cancelled");
-  let available = 0, booked = 0;
-  for (let i = 2; i <= 15; i++) {
-    const b = bookings.find(x => Number(x.seat_number) === i);
-    const el = document.createElement("button");
-    el.type = "button";
-    el.className = "seat" + (b ? " booked" : (selectedSeat === i ? " selected" : ""));
-    el.innerHTML = "SEAT " + i + "<small>" + (b ? "BOOKED" : (currentTripId ? "AVAILABLE" : "SELECT TRIP")) + "</small>";
-    if (b) {
-      booked++;
-      el.disabled = true;
-      el.title = "This seat is already booked.";
-    } else if (!currentTripId) {
-      el.disabled = true;
-      el.title = "Choose a trip first.";
-    } else {
+  const box=document.getElementById("seats");
+  const summary=document.getElementById("seatSummary");
+  if(!box)return;
+  box.innerHTML="";
+  const bookings=onlineBookings.filter(x=>String(x.status||"").toLowerCase()!=="cancelled");
+  selectedSeats=selectedSeats.filter(n=>!bookings.some(x=>Number(x.seat_number)===n));
+  const max=satcoPassengerCount();
+  if(selectedSeats.length>max) selectedSeats=selectedSeats.slice(0,max);
+  selectedSeat=selectedSeats[0]||null;
+  let available=0,booked=0;
+  for(let i=2;i<=15;i++){
+    const b=bookings.find(x=>Number(x.seat_number)===i);
+    const chosen=selectedSeats.includes(i);
+    const el=document.createElement("button");
+    el.type="button";
+    el.dataset.seatNumber=String(i);
+    el.className="seat"+(b?" booked":(chosen?" selected":""));
+    el.innerHTML="SEAT "+i+"<small>"+(b?"BOOKED":(chosen?"SELECTED":(currentTripId?"AVAILABLE":"SELECT TRIP")))+"</small>";
+    if(b){booked++;el.disabled=true;}
+    else if(!currentTripId){el.disabled=true;}
+    else{
       available++;
-      el.onclick = () => {
-        selectedSeat = i;
-        document.getElementById("selectedSeat").textContent = "Seat " + i;
-        renderSeats();
-      };
     }
     box.appendChild(el);
   }
-  if (summary) {
-    summary.innerHTML = `<span>🟢 ${available} Available</span><span>🔴 ${booked} Booked</span><span>💺 14 Passenger Seats</span>`;
-  }
-  if (selectedSeat && bookings.some(x => Number(x.seat_number) === selectedSeat)) {
-    selectedSeat = null;
-    document.getElementById("selectedSeat").textContent = "None";
-  }
+  satcoUpdateSelectedSeatText();
+  if(summary) summary.innerHTML=`<span>🟢 ${available} Available</span><span>🔴 ${booked} Booked</span><span>💺 14 Passenger Seats</span>`;
 }
+
+function handleSeatMapClick(event){
+  const button=event.target.closest("button.seat[data-seat-number]");
+  if(!button || button.disabled) return;
+  event.preventDefault();
+  const seatNumber=Number(button.dataset.seatNumber);
+  if(!Number.isInteger(seatNumber) || seatNumber<2 || seatNumber>15) return;
+  if(!currentTripId){
+    showMsg("regularMessage","Please choose an available trip before selecting a seat.","error");
+    return;
+  }
+  const max=satcoPassengerCount();
+  if(selectedSeats.includes(seatNumber)){
+    selectedSeats=selectedSeats.filter(n=>n!==seatNumber);
+  }else{
+    if(selectedSeats.length>=max){
+      showMsg("regularMessage","You can select only "+max+" seat"+(max>1?"s":"")+" for this booking.","error");
+      return;
+    }
+    selectedSeats.push(seatNumber);
+    selectedSeats.sort((a,b)=>a-b);
+  }
+  selectedSeat=selectedSeats[0]||null;
+  const message=document.getElementById("regularMessage");
+  if(message && !message.classList.contains("error")) message.className="message";
+  satcoUpdateSelectedSeatText();
+  renderSeats();
+}
+
+document.getElementById("seats")?.addEventListener("click",handleSeatMapClick);
 
 function showMsg(id,msg,type) {
   const e=document.getElementById(id); e.textContent=msg; e.className="message "+type;
 }
 function previewGCash(input,type) {
   const file=input.files && input.files[0]; if(!file) return;
+  const allowed=["image/jpeg","image/png","image/webp"];
+  if(!allowed.includes(file.type)){
+    input.value="";
+    return showMsg(type==="regular"?"regularMessage":"specialMessage","Please choose a JPG, PNG, or WEBP image.","error");
+  }
+  if(file.size>5*1024*1024){
+    input.value="";
+    return showMsg(type==="regular"?"regularMessage":"specialMessage","The screenshot must be 5 MB or smaller.","error");
+  }
+  if(type==="regular") regularReceipt=file; else specialReceipt=file;
   const reader=new FileReader();
   reader.onload=e=>{
-    if(type==="regular"){ regularReceipt=e.target.result; document.getElementById("gcashPreview").src=regularReceipt; document.getElementById("gcashPreview").style.display="block"; document.getElementById("gcashStatus").textContent="Screenshot selected."; }
-    else { specialReceipt=e.target.result; document.getElementById("sGcashPreview").src=specialReceipt; document.getElementById("sGcashPreview").style.display="block"; document.getElementById("sGcashStatus").textContent="Screenshot selected."; }
+    if(type==="regular"){ document.getElementById("gcashPreview").src=e.target.result; document.getElementById("gcashPreview").style.display="block"; document.getElementById("gcashStatus").textContent="Screenshot selected."; }
+    else { document.getElementById("sGcashPreview").src=e.target.result; document.getElementById("sGcashPreview").style.display="block"; document.getElementById("sGcashStatus").textContent="Screenshot selected."; }
   };
   reader.readAsDataURL(file);
 }
@@ -776,7 +934,9 @@ async function uploadGcashReceipt(file, bookingCode) {
   if (file.size > 5*1024*1024) throw new Error("GCash screenshot must be 5 MB or smaller.");
 
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-  const path = `${bookingCode}/${crypto.randomUUID()}.${ext}`;
+  // This path matches the public upload policy for the private receipt bucket.
+  const safeCode=String(bookingCode||"PENDING").replace(/[^A-Za-z0-9_-]/g,"_");
+  const path = `pending/${safeCode}/receipt.${ext}`;
   const { error } = await satcoSupabase.storage.from("satco-payment-receipts").upload(path,file,{
     contentType:file.type,
     upsert:false
@@ -791,112 +951,131 @@ async function submitRegular() {
   const time=document.getElementById("time").value;
   const route=document.getElementById("route").value;
   const van=document.getElementById("van").value;
-  const name=document.getElementById("name").value.trim();
   const contact=document.getElementById("contact").value.trim();
+  const pickup=document.getElementById("pickup").value.trim();
+  const dropoff=document.getElementById("dropoff").value.trim();
   const payment=document.getElementById("payment").value;
+  const count=satcoPassengerCount();
+  const names=satcoGroupNames();
+  document.getElementById("name").value=names[0]||"";
 
   if(!date||!time||!route||!van) return showMsg("regularMessage","Please complete the trip information.","error");
-  if(!currentTripId) {
-    try { await findCurrentTrip(); }
-    catch(e) { return showMsg("regularMessage","Unable to connect to the online booking database.","error"); }
-  }
-  if(!currentTripId) return showMsg("regularMessage","The selected trip is not available online yet. Please choose another scheduled trip.","error");
-  if(!selectedSeat) return showMsg("regularMessage","Please select a seat.","error");
-  if(!name||!contact) return showMsg("regularMessage","Please enter the passenger name and contact number.","error");
+  if(!currentTripId){ try{await findCurrentTrip();}catch(e){return showMsg("regularMessage","Unable to connect to the online booking database.","error");}}
+  if(!currentTripId) return showMsg("regularMessage","The selected trip is not available online yet.","error");
+  if(selectedSeats.length!==count) return showMsg("regularMessage","Please select exactly "+count+" seat"+(count>1?"s":"")+".","error");
+  if(names.some(n=>!n)) return showMsg("regularMessage","Please enter the name of every passenger.","error");
+  if(!contact) return showMsg("regularMessage","Please enter the contact number.","error");
+  if(!pickup||!dropoff) return showMsg("regularMessage","Please enter the pick-up and drop-off points.","error");
   if(!payment) return showMsg("regularMessage","Please select a payment method.","error");
   if(payment==="GCASH"&&!regularReceipt) return showMsg("regularMessage","Please upload your GCash payment screenshot.","error");
 
-  try {
-    const { data, error } = await satcoSupabase.rpc("book_satco_seat", {
-      p_trip_id: currentTripId,
-      // selectedSeat is the exact database seat number (2–15).
-      p_seat_number: selectedSeat,
-      p_passenger_name: name,
-      p_pickup_point: document.getElementById("pickup").value.trim(),
-      p_dropoff_point: document.getElementById("dropoff").value.trim(),
-      p_contact_no: contact,
-      p_payment_method: payment,
-      p_gcash_reference: null
+  try{
+    const {data,error}=await satcoSupabase.rpc("book_satco_group",{
+      p_trip_id:currentTripId,
+      p_seat_numbers:selectedSeats,
+      p_passenger_names:names,
+      p_pickup_point:pickup,
+      p_dropoff_point:dropoff,
+      p_contact_no:contact,
+      p_payment_method:payment,
+      p_gcash_reference:null
     });
     if(error) throw error;
+    const result=Array.isArray(data)?(data[0]||{}):(data||{});
+    const groupCode=result.group_booking_code||result.booking_code||result.group_code;
+    if(!groupCode) throw new Error("The group booking did not return a booking number.");
 
-    const booking = Array.isArray(data) ? data[0] : data;
-    if(!booking || !booking.booking_code) throw new Error("The online booking did not return a confirmation number.");
-
-    if(payment==="GCASH" && regularReceipt){
-      const receiptPath = await uploadGcashReceipt(regularReceipt, booking.booking_code);
-      const { error: receiptUpdateError } = await satcoSupabase.rpc("attach_satco_payment_receipt", {
-        p_booking_code: booking.booking_code,
-        p_contact_no: contact,
-        p_receipt_path: receiptPath
-      });
-      if(receiptUpdateError){
-        // The booking remains valid; report that the receipt needs attention.
-        console.error("Receipt link update failed:", receiptUpdateError);
-        showMsg("regularMessage","Booking " + booking.booking_code + " was created, but the GCash screenshot could not be linked. Please contact SATCO and provide the booking number.","error");
-      }
+    if(payment==="GCASH"&&regularReceipt){
+      try{
+        const receiptPath=await uploadGcashReceipt(regularReceipt,groupCode);
+        // Link receipt to every active item in the group when supported by the existing RPC.
+        for(const item of (result.passengers||result.bookings||result.items||[])){
+          if(item.booking_code){
+            await satcoSupabase.rpc("attach_satco_payment_receipt",{
+              p_booking_code:item.booking_code,p_contact_no:contact,p_receipt_path:receiptPath
+            });
+          }
+        }
+      }catch(receiptErr){console.error("Receipt attachment:",receiptErr);}
     }
 
-    document.getElementById("confirmationText").textContent =
-`Booking No.: ${booking.booking_code}
-Passenger: ${name}
+    const seatLines=selectedSeats.map((seat,i)=>`Passenger ${i+1}: ${names[i]} — Seat ${seat}`).join("\\n");
+    document.getElementById("confirmationText").textContent=
+`Booking No.: ${groupCode}
+Passengers: ${count}
+${seatLines}
 Contact: ${contact}
-Date: ${booking.trip_date}
-Departure: ${booking.departure_time}
-Route: ${booking.route}
-Van / Plate: ${booking.van_no}
-Driver: ${booking.driver_name}
-Seat: ${selectedSeat}
-Pick-Up: ${document.getElementById("pickup").value.trim() || "—"}
-Drop-Off: ${document.getElementById("dropoff").value.trim() || "—"}
-Payment: ${booking.payment_method}
-Payment Status: ${booking.payment_status}
-Booking Status: ${booking.status}
+Date: ${date}
+Departure: ${time}
+Route: ${route}
+Van / Plate: ${van}
+Pick-Up: ${document.getElementById("pickup").value.trim()||"—"}
+Drop-Off: ${document.getElementById("dropoff").value.trim()||"—"}
+Payment: ${payment}
 
 Your booking is now recorded ONLINE.
-Please keep this booking number and your contact number for cancellation or inquiries.`;
+Keep this Booking Number. It can be used to view and cancel individual passengers/seats.`;
 
     document.getElementById("confirmation").style.display="block";
-    showMsg("regularMessage","Booking successfully recorded ONLINE. Your booking number is " + booking.booking_code + ".","success");
-    selectedSeat=null;
-    document.getElementById("selectedSeat").textContent="None";
-    regularReceipt="";
+    showMsg("regularMessage","Booking successful. Booking Number: "+groupCode+".","success");
+    selectedSeats=[]; selectedSeat=null; satcoUpdateSelectedSeatText();
+    regularReceipt=null;
     document.getElementById("gcashFile").value="";
     document.getElementById("gcashPreview").style.display="none";
-    await loadOnlineBookings();
-    renderSeats();
-    renderBookingList();
-  } catch(e) {
+    await loadOnlineBookings(); renderSeats(); renderBookingList();
+  }catch(e){
     console.error(e);
-    showMsg("regularMessage", e.message || "Online booking failed. If a booking number was already issued, please check it before trying again.","error");
+    showMsg("regularMessage",e.message||"Online booking failed. Please check the selected seats and try again.","error");
     await refreshOnlineTrip();
   }
 }
 
-async function cancelBooking() {
-  const id = document.getElementById("cancelBookingId").value.trim();
-  const contact = document.getElementById("cancelContact").value.trim();
-  if (!id || !contact) return showMsg("cancelMessage","Please enter both the booking number and contact number.","error");
-
-  if (!confirm("Are you sure you want to cancel booking " + id + "?")) return;
-  try {
-    const { data, error } = await satcoSupabase.rpc("cancel_satco_booking", {
-      p_booking_code: id,
-      p_contact_no: contact
-    });
-    if (error) throw error;
-    showMsg("cancelMessage","Booking " + id + " has been cancelled. Seat " + data.seat_number + " is available again online.","success");
+async function cancelBooking(){
+  const code=document.getElementById("cancelBookingId").value.trim().toUpperCase();
+  if(!code) return showMsg("cancelMessage","Please enter the Booking Number.","error");
+  const box=document.getElementById("cancelBookingItems");
+  try{
+    const {data,error}=await satcoSupabase.rpc("get_satco_booking_for_cancel",{p_booking_code:code});
+    if(error) throw error;
+    const rows=(data||[]).filter(x=>String(x.status||"").toLowerCase()!=="cancelled");
+    if(!rows.length){
+      box.classList.add("hidden");
+      return showMsg("cancelMessage","No active passengers were found for this Booking Number.","error");
+    }
+    box.innerHTML='<strong>Select passenger(s) to cancel:</strong>'+
+      rows.map(r=>`<label style="display:flex;gap:10px;align-items:center;margin:10px 0;padding:10px;border:1px solid #cbd5e1;border-radius:10px">
+      <input class="cancel-seat-choice" type="checkbox" value="${Number(r.seat_number)}" style="width:auto">
+      <span>${String(r.passenger_name||"").toUpperCase()} — SEAT ${Number(r.seat_number)}</span></label>`).join("")+
+      '<button type="button" class="action danger" onclick="confirmSelectedCancellation()">CONFIRM SELECTED CANCELLATION</button>';
+    box.dataset.bookingCode=code;
+    box.classList.remove("hidden");
+    showMsg("cancelMessage","Booking found. Select only the passenger(s) who will cancel.","success");
+  }catch(e){
+    console.error(e); box.classList.add("hidden");
+    showMsg("cancelMessage",e.message||"Unable to find this Booking Number.","error");
+  }
+}
+async function confirmSelectedCancellation(){
+  const box=document.getElementById("cancelBookingItems");
+  const code=box.dataset.bookingCode||"";
+  const seats=[...box.querySelectorAll(".cancel-seat-choice:checked")].map(x=>Number(x.value));
+  if(!seats.length) return showMsg("cancelMessage","Please select at least one passenger/seat to cancel.","error");
+  if(!confirm("Cancel the selected "+seats.length+" passenger booking(s)?")) return;
+  try{
+    const {error}=await satcoSupabase.rpc("cancel_satco_booking_items",{p_booking_code:code,p_seat_numbers:seats});
+    if(error) throw error;
+    showMsg("cancelMessage","Selected passenger booking(s) cancelled. Their seats are available again.","success");
+    box.classList.add("hidden"); box.innerHTML="";
     await refreshOnlineTrip();
-  } catch(e) {
-    console.error(e);
-    showMsg("cancelMessage", e.message || "Unable to cancel the booking online.","error");
+  }catch(e){
+    console.error(e); showMsg("cancelMessage",e.message||"Unable to cancel the selected passenger(s).","error");
   }
 }
 
 function clearCancel() {
   document.getElementById("cancelBookingId").value = "";
-  document.getElementById("cancelContact").value = "";
   document.getElementById("cancelMessage").className = "message";
+  const cb=document.getElementById("cancelBookingItems"); if(cb){cb.innerHTML="";cb.classList.add("hidden");}
 }
 
 async function clearAllBookings() {
@@ -906,23 +1085,15 @@ async function clearAllBookings() {
 function renderBookingList() {
   const box = document.getElementById("bookingList");
   if (!box) return;
-  const a = onlineBookings;
-  if (!a.length) {
-    box.innerHTML = "<p style='color:#64748b'>No online bookings for the selected trip.</p>";
-    return;
-  }
-  let rows = a.map(x => `<tr>
-    <td>${x.booking_code || "—"}</td><td>${x.passenger_name || "—"}</td><td>Seat ${x.seat_number}</td>
-    <td>${x.pickup_point || "—"}</td><td>${x.dropoff_point || "—"}</td>
-    <td class="${x.status==="Cancelled"?"status-cancelled":"status-pending"}">${x.status}</td>
-  </tr>`).join("");
-  box.innerHTML = `<h3 style='margin:12px 0 8px;font-size:15px'>Live passenger manifest for this trip</h3>
-  <div style='overflow-x:auto'><table><thead><tr><th>Booking No.</th><th>Passenger</th><th>Seat</th><th>Pick-Up</th><th>Drop-Off</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  // Passenger privacy: booking details are never rendered on the public page.
+  // onlineBookings is still used internally to lock already-booked seats.
+  box.innerHTML = "";
+  box.classList.add("hidden");
 }
 
 function quickCancel(id) {
   document.getElementById("cancelBookingId").value = id;
-  document.getElementById("cancelContact").focus();
+  document.getElementById("cancelBookingId").focus();
 }
 
 function clearRegular() {
@@ -932,8 +1103,9 @@ function clearRegular() {
   ["name","contact","pickup","dropoff"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("payment").value="";
   selectedSeat=null;
+  selectedSeats=[];
   document.getElementById("selectedSeat").textContent="None";
-  regularReceipt="";
+  regularReceipt=null;
   document.getElementById("confirmation").style.display="none";
   document.getElementById("regularMessage").className="message";
   document.getElementById("gcashFile").value="";
@@ -942,7 +1114,55 @@ function clearRegular() {
   document.getElementById("regularGCash").classList.add("hidden");
   renderSeats();
 }
-function clearSpecial() { ["sName","sContact","sDate","sTime","sPickup","sDestination","sPassengers","sReturnDate","sReturnTime","sNotes"].forEach(id=>document.getElementById(id).value=""); document.getElementById("sVan").value=""; document.getElementById("sReturn").value="No"; document.getElementById("sPayment").value=""; specialReceipt=""; document.getElementById("specialMessage").className="message"; toggleReturn(); }
+function toggleReturn(){
+  const returning=document.getElementById("sReturn")?.value==="Yes";
+  document.getElementById("returnDateBox")?.classList.toggle("hidden",!returning);
+  document.getElementById("returnTimeBox")?.classList.toggle("hidden",!returning);
+}
+async function submitSpecial(){
+  const name=document.getElementById("sName").value.trim().toUpperCase();
+  const contact=document.getElementById("sContact").value.trim();
+  const date=document.getElementById("sDate").value;
+  const time=document.getElementById("sTime").value;
+  const pickup=document.getElementById("sPickup").value.trim();
+  const destination=document.getElementById("sDestination").value.trim();
+  const passengers=Number(document.getElementById("sPassengers").value||0);
+  const van=document.getElementById("sVan").value;
+  const returning=document.getElementById("sReturn").value;
+  const returnDate=document.getElementById("sReturnDate").value;
+  const returnTime=document.getElementById("sReturnTime").value;
+  const payment=document.getElementById("sPayment").value;
+  const notes=document.getElementById("sNotes").value.trim();
+  if(!name||!contact||!date||!time||!pickup||!destination||!passengers||!van){
+    return showMsg("specialMessage","Please complete all required Special Trip fields.","error");
+  }
+  if(passengers<1||passengers>14) return showMsg("specialMessage","Passenger count must be from 1 to 14.","error");
+  if(returning==="Yes"&&(!returnDate||!returnTime)) return showMsg("specialMessage","Please enter the return date and time.","error");
+  if(payment==="GCASH"&&!specialReceipt) return showMsg("specialMessage","Please upload your GCash payment screenshot.","error");
+  const message=[
+    "SPECIAL TRIP REQUEST",
+    `Date/Time: ${date} ${time}`,
+    `Route: ${pickup} to ${destination}`,
+    `Passengers: ${passengers}`,
+    `Preferred Van: ${van}`,
+    `Return Trip: ${returning}${returning==="Yes"?` — ${returnDate} ${returnTime}`:""}`,
+    `Payment: ${payment||"Not yet selected"}`,
+    `Notes: ${notes||"None"}`
+  ].join("\n");
+  try{
+    const {data,error}=await satcoSupabase.rpc("create_satco_chat",{
+      p_passenger_name:name,p_contact_no:contact,p_booking_code:null,p_message:message
+    });
+    if(error) throw error;
+    const result=Array.isArray(data)?(data[0]||{}):(data||{});
+    const inquiry=result.inquiry_code||result.code||"";
+    showMsg("specialMessage","Special Trip request sent successfully"+(inquiry?". Inquiry Number: "+inquiry:".")+" SATCO Admin will confirm the request.","success");
+  }catch(e){
+    console.error(e);
+    showMsg("specialMessage",e.message||"Unable to send the Special Trip request. Please try again.","error");
+  }
+}
+function clearSpecial() { ["sName","sContact","sDate","sTime","sPickup","sDestination","sPassengers","sReturnDate","sReturnTime","sNotes"].forEach(id=>document.getElementById(id).value=""); document.getElementById("sVan").value=""; document.getElementById("sReturn").value="No"; document.getElementById("sPayment").value=""; specialReceipt=null; document.getElementById("sGcashFile").value=""; document.getElementById("sGcashPreview").style.display="none"; document.getElementById("specialGCash").classList.add("hidden"); document.getElementById("specialMessage").className="message"; toggleReturn(); }
 document.getElementById("tripChooser").addEventListener("change", async e => { await selectTripById(e.target.value); });
 loadTripChooser();
 
@@ -1192,11 +1412,11 @@ async function adminSetChatStatus(status){
 }
 
 /* Restored SATCO two-way chat logic */
-let satcoChatCode = null;
-let satcoChatContact = null;
-let satcoChatPoll = null;
-let adminActiveChatCode = null;
-let adminChatPoll = null;
+satcoChatCode = null;
+satcoChatContact = null;
+satcoChatPoll = null;
+adminActiveChatCode = null;
+adminChatPoll = null;
 
 function chatEsc(v){
   return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1353,12 +1573,12 @@ async function adminSetChatStatus(status){
     <h2>🔐 Admin Login</h2>
     <div class="info">Use your SATCO administrator Supabase account. Passengers do not need to log in.</div>
     <label style="margin-top:12px">Admin Email</label>
-    <input id="adminEmail" type="email" placeholder="Enter admin email">
+    <input id="adminEmailLegacy" type="email" placeholder="Enter admin email">
     <label style="margin-top:10px">Password</label>
-    <input id="adminPassword" type="password" placeholder="Enter password">
-    <div id="adminLoginMessage" class="message"></div>
+    <input id="adminPasswordLegacy" type="password" placeholder="Enter password">
+    <div id="adminLoginMessageLegacy" class="message"></div>
     <div class="actions">
-      <button id="adminLoginSubmit" type="button" class="action primary" onclick="adminLogin()">LOGIN</button>
+      <button id="adminLoginSubmitLegacy" type="button" class="action primary" onclick="adminLogin()">LOGIN</button>
       <button type="button" class="action secondary" onclick="closeAdminLogin()">CLOSE</button>
     </div>
   </div>
@@ -1437,7 +1657,7 @@ function closeAdminLogin(){
   m.classList.add("hidden");
   m.style.display="none";
 }
-document.getElementById("adminPassword")?.addEventListener("keydown",e=>{
+document.getElementById("adminPasswordLegacy")?.addEventListener("keydown",e=>{
   if(e.key==="Enter"){ e.preventDefault(); adminLogin(); }
 });
 function adminMsg(msg, type="success"){
@@ -1445,18 +1665,20 @@ function adminMsg(msg, type="success"){
   if(e){ e.textContent=msg; e.className="message "+type; }
 }
 async function adminLogin(){
-  const emailEl=document.getElementById("adminEmail");
-  const passwordEl=document.getElementById("adminPassword");
-  const msg=document.getElementById("adminLoginMessage");
-  const loginBtn=document.getElementById("adminLoginSubmit");
+  const emailEl=document.getElementById("adminEmailLegacy");
+  const passwordEl=document.getElementById("adminPasswordLegacy");
+  const msg=document.getElementById("adminLoginMessageLegacy");
+  const loginButtons=[document.getElementById("adminLoginSubmitLegacy"),document.getElementById("adminLoginSubmitNative")].filter(Boolean);
+  const nativeMsg=document.getElementById("adminLoginMessageNative");
   const email=(emailEl?.value||"").trim();
   const password=passwordEl?.value||"";
 
   const showLoginMessage=(text,type="error")=>{
-    if(!msg) return;
-    msg.textContent=text;
-    msg.className="message "+type;
-    msg.style.display="block";
+    [msg,nativeMsg].filter(Boolean).forEach(el=>{
+      el.textContent=text;
+      el.className="message "+type;
+      el.style.display="block";
+    });
   };
 
   if(!email||!password){
@@ -1464,7 +1686,7 @@ async function adminLogin(){
     return;
   }
 
-  if(loginBtn){ loginBtn.disabled=true; loginBtn.textContent="LOGGING IN..."; }
+  loginButtons.forEach(btn=>{btn.disabled=true;btn.textContent="LOGGING IN...";});
   showLoginMessage("Connecting to SATCO administrator account...","success");
 
   try{
@@ -1497,6 +1719,7 @@ async function adminLogin(){
     document.getElementById("adminLoginBtn")?.classList.add("hidden");
     document.getElementById("adminLogoutBtn")?.classList.remove("hidden");
     document.getElementById("adminPanel")?.classList.remove("hidden");
+    const details=document.getElementById("adminLoginDetails"); if(details) details.open=false;
     await adminLoadTrips();
     adminMsg("Admin mode is ON. You can now manage trip dates and times.");
     document.getElementById("adminPanel")?.scrollIntoView({behavior:"smooth"});
@@ -1512,7 +1735,7 @@ async function adminLogin(){
       showLoginMessage(raw,"error");
     }
   }finally{
-    if(loginBtn){ loginBtn.disabled=false; loginBtn.textContent="LOGIN"; }
+    loginButtons.forEach(btn=>{btn.disabled=false;btn.textContent="LOGIN";});
   }
 }
 
@@ -1679,7 +1902,7 @@ async function adminLoadTrips(){
   box.innerHTML=(data||[]).map(t=>`
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #ddd;padding:8px 0">
       <strong>${t.trip_date}</strong> ${String(t.departure_time||"").slice(0,5)}
-      — ${t.route} — ${t.van_no} — ${isGamayOrigin(t.route) && Number(t.trip_number)>=1 && Number(t.trip_number)<=4 ? tripLabel(t.trip_number)+" • "+formatDepartureTime(t.departure_time) : "Additional / Time Only • "+formatDepartureTime(t.departure_time)} — ${t.booking_open ? "🟢 OPEN" : "🔴 CLOSED"}
+      — ${t.route} — ${SATCO_PLATE_NUMBER} — ${isGamayOrigin(t.route) && Number(t.trip_number)>=1 && Number(t.trip_number)<=4 ? tripLabel(t.trip_number)+" • "+formatDepartureTime(t.departure_time) : "Additional / Time Only • "+formatDepartureTime(t.departure_time)} — ${t.booking_open ? "🟢 OPEN" : "🔴 CLOSED"}
       <button class="action secondary" style="padding:5px 9px" onclick='adminSelectTrip(${JSON.stringify(t)})'>EDIT</button>
     </div>`).join("") || "No trips found.";
 }
@@ -1690,7 +1913,7 @@ function adminSelectTrip(t){
   document.getElementById("adminTime").value=String(t.departure_time||"").slice(0,5);
   document.getElementById("adminTripNumber").value=(Number(t.trip_number)>=1 && Number(t.trip_number)<=4) ? String(t.trip_number) : "0";
   document.getElementById("adminRoute").value=t.route||"";
-  document.getElementById("adminVan").value=t.van_no||"";
+  document.getElementById("adminVan").value=SATCO_PLATE_NUMBER;
   adminMsg("Trip selected. Change the date/time, then press UPDATE SELECTED TRIP.");
 }
 async function adminSaveTrip(){
@@ -1705,14 +1928,21 @@ async function adminSaveTrip(){
   if(!date||!time||!route||!van) return adminMsg("Please complete Date, Time, Route and Van.","error");
   const {data:userData}=await satcoSupabase.auth.getUser();
   if(!userData?.user) return adminMsg("Please log in as Admin first.","error");
+  const {data:duplicates,error:duplicateError}=await satcoSupabase.from("satco_trips")
+    .select("id").eq("trip_date",date).eq("departure_time",time).eq("route",route)
+    .eq("van_no",van).eq("status","scheduled").limit(1);
+  if(duplicateError) return adminMsg("Unable to check the schedule: "+duplicateError.message,"error");
+  if(duplicates?.length) return adminMsg("This exact trip is already saved. Select it from Scheduled Trips and use UPDATE instead.","error");
+  const saveBtn=document.getElementById("adminSaveTripBtn");
+  if(saveBtn){saveBtn.disabled=true;saveBtn.textContent="SAVING...";}
   const {data:newTrip,error}=await satcoSupabase.from("satco_trips").insert({
     trip_date:date, departure_time:time, route, van_no:van,
     driver_name:(DRIVERS[van]?.[0] || ""), driver_contact:(DRIVERS[van]?.[1] || ""), status:"scheduled", trip_number:tripNumber, booking_open:true
   }).select("id").single();
+  if(saveBtn){saveBtn.disabled=false;saveBtn.textContent="SAVE NEW TRIP";}
   if(error) return adminMsg(error.message,"error");
-  const seats=Array.from({length:15},(_,i)=>({trip_id:newTrip.id,seat_number:i+1,status:"Available"}));
-  const seatResult=await satcoSupabase.from("satco_trip_seats").insert(seats);
-  if(seatResult.error) return adminMsg("Trip saved, but seat setup needs attention: "+seatResult.error.message,"error");
+  // Supabase creates the trip's 15 seat records automatically through
+  // trg_ensure_satco_trip_seats. Do not insert them again from the browser.
   adminMsg("New trip saved with its own 15 seats. You may create another departure for the same date/van by setting a different Admin-controlled time.");
   refreshWeeklyScheduleFromTripDate(date);
   await adminLoadTrips(); if(typeof loadTripChooser==="function") await loadTripChooser();
@@ -1778,6 +2008,54 @@ setTimeout(showPasswordResetIfNeeded, 500);
 
 
 <script>
+// Clear mobile-friendly route suggestion list. Free typing remains available.
+(function(){
+  const suggestedRoutes=[
+    "Gamay - Catarman","Catarman - Gamay","Gamay - Calbayog","Calbayog - Gamay",
+    "Gamay - Palapag","Palapag - Gamay","Gamay - Mapanas","Mapanas - Gamay",
+    "Gamay - Laoang","Laoang - Gamay","Gamay - Lapinig","Lapinig - Gamay",
+    "Gamay - Tacloban","Tacloban - Gamay","Gamay - Manila","Manila - Gamay"
+  ];
+  function setupAdminRoutePicker(){
+    const input=document.getElementById("adminRoute");
+    const menu=document.getElementById("adminRouteMenu");
+    if(!input||!menu)return;
+    function showRoutes(){
+      const query=input.value.trim().toLowerCase();
+      const matches=suggestedRoutes.filter(route=>!query||route.toLowerCase().includes(query));
+      menu.innerHTML="";
+      matches.forEach(route=>{
+        const button=document.createElement("button");
+        button.type="button";
+        button.className="route-option";
+        button.setAttribute("role","option");
+        button.textContent=route;
+        button.addEventListener("pointerdown",event=>event.preventDefault());
+        button.addEventListener("click",()=>{
+          input.value=route;
+          menu.classList.remove("open");
+          input.setAttribute("aria-expanded","false");
+          input.dispatchEvent(new Event("change",{bubbles:true}));
+        });
+        menu.appendChild(button);
+      });
+      menu.classList.toggle("open",matches.length>0);
+      input.setAttribute("aria-expanded",matches.length>0?"true":"false");
+    }
+    input.addEventListener("focus",showRoutes);
+    input.addEventListener("click",showRoutes);
+    input.addEventListener("input",showRoutes);
+    document.addEventListener("click",event=>{
+      if(!event.target.closest(".route-picker")){
+        menu.classList.remove("open");
+        input.setAttribute("aria-expanded","false");
+      }
+    });
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",setupAdminRoutePicker);
+  else setupAdminRoutePicker();
+})();
+
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('tripDateChooser')?.addEventListener('change',()=>{ populateTripNumbers(); });
   document.getElementById('tripNumberChooser')?.addEventListener('change',chooseTripNumber);
@@ -1802,7 +2080,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(typeof window.adminLogin==='function'){
         window.adminLogin();
       }else{
-        const msg=document.getElementById('adminLoginMessage');
+        const msg=document.getElementById('adminLoginMessageLegacy');
         if(msg){ msg.textContent='Admin login is still loading. Please refresh the page once.'; msg.className='message error'; }
       }
     });
@@ -1942,6 +2220,124 @@ document.addEventListener("input", function(e){
     });
   });
 })();
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  if(document.getElementById("passengerCount")) satcoSetPassengerCount();
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  const loginBtn=document.getElementById("adminLoginSubmitNative");
+  const pw=document.getElementById("adminPasswordNative");
+  async function nativeAdminLogin(){
+    const email=(document.getElementById("adminEmailNative")?.value||"").trim();
+    const pass=document.getElementById("adminPasswordNative")?.value||"";
+    const legacyEmail=document.getElementById("adminEmailLegacy");
+    const legacyPass=document.getElementById("adminPasswordLegacy");
+    if(legacyEmail) legacyEmail.value=email;
+    if(legacyPass) legacyPass.value=pass;
+    try{
+      await adminLogin();
+      const d=document.getElementById("adminLoginDetails");
+      if(d && !document.getElementById("adminPanel")?.classList.contains("hidden")) d.open=false;
+    }catch(e){
+      const msg=document.getElementById("adminLoginMessageNative");
+      if(msg){msg.textContent=e?.message||"Unable to log in.";msg.className="message error";}
+    }
+  }
+  if(loginBtn) loginBtn.addEventListener("click",nativeAdminLogin);
+  if(pw) pw.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();nativeAdminLogin();}});
+});
+</script>
+
+<script>
+/* Reliable mobile pick-up/drop-off selector (does not depend on Android datalist support). */
+document.addEventListener("DOMContentLoaded",function(){
+  const source=[...document.querySelectorAll("#locations option")]
+    .map(o=>(o.value||"").trim()).filter(Boolean);
+  const unique=[...new Set(source)];
+
+  function closeLocationMenus(exceptId){
+    document.querySelectorAll(".location-menu.open").forEach(menu=>{
+      if(menu.id!==exceptId){
+        menu.classList.remove("open");
+        const input=menu.closest(".location-picker")?.querySelector("input");
+        if(input) input.setAttribute("aria-expanded","false");
+      }
+    });
+  }
+
+  function setupLocationPicker(inputId){
+    const input=document.getElementById(inputId);
+    const menu=document.getElementById(inputId+"Menu");
+    const toggle=document.querySelector(`[data-location-for="${inputId}"]`);
+    if(!input||!menu||!toggle) return;
+
+    function render(filter=""){
+      const term=filter.trim().toLowerCase();
+      const matches=unique.filter(place=>!term||place.toLowerCase().includes(term));
+      menu.innerHTML="";
+      matches.forEach(place=>{
+        const button=document.createElement("button");
+        button.type="button";
+        button.className="location-option";
+        button.setAttribute("role","option");
+        button.textContent=place;
+        button.addEventListener("click",function(){
+          input.value=place;
+          input.dispatchEvent(new Event("change",{bubbles:true}));
+          menu.classList.remove("open");
+          input.setAttribute("aria-expanded","false");
+          input.blur();
+        });
+        menu.appendChild(button);
+      });
+      if(!matches.length){
+        const note=document.createElement("div");
+        note.className="location-option";
+        note.textContent="No matching saved place — continue typing your location.";
+        menu.appendChild(note);
+      }
+    }
+
+    function toggleMenu(){
+      const opening=!menu.classList.contains("open");
+      closeLocationMenus(opening?menu.id:null);
+      if(opening){
+        render(input.value);
+        menu.classList.add("open");
+        input.setAttribute("aria-expanded","true");
+        menu.scrollTop=0;
+        setTimeout(()=>menu.scrollIntoView({block:"nearest",behavior:"smooth"}),0);
+      }else{
+        menu.classList.remove("open");
+        input.setAttribute("aria-expanded","false");
+      }
+    }
+
+    toggle.addEventListener("pointerdown",e=>e.preventDefault());
+    toggle.addEventListener("click",toggleMenu);
+    input.addEventListener("input",function(){
+      if(menu.classList.contains("open")) render(input.value);
+    });
+    input.addEventListener("keydown",function(e){
+      if(e.key==="ArrowDown"&&!menu.classList.contains("open")){e.preventDefault();toggleMenu();}
+      if(e.key==="Escape"){menu.classList.remove("open");input.setAttribute("aria-expanded","false");}
+    });
+    render();
+  }
+
+  setupLocationPicker("pickup");
+  setupLocationPicker("dropoff");
+  document.addEventListener("click",function(e){
+    if(!e.target.closest(".location-picker")) closeLocationMenus();
+  });
+});
 </script>
 
 </body>
