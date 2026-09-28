@@ -123,6 +123,14 @@ input[type="text"], input[type="search"], textarea {
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/satco-192.png">
+<link rel="apple-touch-icon" href="./icons/satco-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SATCO-Gamay">
+
 </head>
 <body><div class="online-status">● ONLINE BOOKING DATABASE CONNECTED</div>
 
@@ -2338,6 +2346,17 @@ document.addEventListener("DOMContentLoaded",function(){
     if(!e.target.closest(".location-picker")) closeLocationMenus();
   });
 });
+</script>
+
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./service-worker.js').catch(function (err) {
+      console.warn('SATCO service worker registration failed:', err);
+    });
+  });
+}
 </script>
 
 </body>
